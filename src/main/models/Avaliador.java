@@ -7,5 +7,5 @@ public interface Avaliador {
      * @param comentario texto sobre o conteudo
      * @return um objeto avaliacao contendo os dados da avaliacao
      */
-    public void avaliar(Conteudo conteudo, int nota, String comentario); // classe Conteudo ainda não criada, em breve implementada. (teste)
+    public void avaliar(Conteudo conteudo, int nota, String comentario); // classe Conteudo ainda não criada, em breve implementada.
 }
