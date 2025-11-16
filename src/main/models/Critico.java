@@ -5,7 +5,7 @@ import java.util.UUID;
 
 // Avaliacao e Conteudo ainda não criada, implementação baseada na UML
 public class Critico extends Pessoa implements Avaliador {
-    
+
     /*
     * constante peso em avaliacoes 
     * atende ao RF-5
@@ -20,7 +20,7 @@ public class Critico extends Pessoa implements Avaliador {
     * cria uma avaliação com peso personalizado e a adiciona ao conteúdo.
     */
     @Override
-    public Avalicao avaliar(Conteudo conteudo, int nota, String comentario){
+    public Avaliacao avaliar(Conteudo conteudo, int nota, String comentario) {
         Avaliacao novaAvaliacao = new Avaliacao(nota, PESO_AVALIACAO, comentario, this.getId());
         
         conteudo.adicionarAvaliacao(novaAvaliacao);
