@@ -56,3 +56,71 @@ TCP-20252-final-grupo-05
         │
         └───── test
                 └── PessoaTest.java      <-- (Testes unitários)
+```
+
+## 🚀 Como Compilar e Executar
+
+### Compilação
+
+Para compilar o projeto, execute o seguinte comando na raiz do projeto:
+
+```bash
+javac -d build -sourcepath src src/main/**/*.java
+```
+
+### Execução
+
+Após compilar, execute o projeto com:
+
+```bash
+java -cp build main.Main
+```
+
+## 🔄 Fluxo de Trabalho
+
+### Antes de Começar a Trabalhar
+
+1. **Faça um pull** para garantir que está com a versão mais recente:
+   ```bash
+   git pull origin develop
+   ```
+
+2. **Faça merge de develop** para a branch que estiver trabalhando:
+   ```bash
+   git checkout sua-branch
+   git merge develop
+   ```
+
+### Desenvolvimento
+
+1. **Crie uma branch separada** para sua feature/correção:
+   ```bash
+   git checkout -b nome-da-sua-feature
+   ```
+   Ou, se já estiver em uma branch:
+   ```bash
+   git checkout sua-branch
+   ```
+
+2. **Desenvolva** suas alterações normalmente, fazendo commits frequentes e descritivos:
+   ```bash
+   git add .
+   git commit -m "Descrição clara do que foi feito"
+   ```
+
+### Ao Finalizar o Trabalho
+
+1. **Certifique-se** de que está tudo commitado:
+   ```bash
+   git status
+   ```
+
+2. **Faça push** da sua branch:
+   ```bash
+   git push origin nome-da-sua-feature
+   ```
+
+3. **Abra um Pull Request (PR)** para a branch `develop` no GitHub
+   - Descreva claramente o que foi implementado
+   - Referencie issues relacionadas, se houver
+   - Aguarde revisão antes de fazer merge
