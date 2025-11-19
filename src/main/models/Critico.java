@@ -2,7 +2,6 @@ package main.models;
 
 import java.time.LocalDate;
 
-// Avaliacao e Conteudo ainda não criada, implementação baseada na UML
 public class Critico extends Pessoa implements Avaliador {
 
     /*
