@@ -20,6 +20,11 @@ public class Temporada {
     }
 
     public void adicionarEpisodio(Episodio episodio) {
+
+        if (episodio == null){
+            throw new IllegalArgumentException("Erro na adição de episódio: valor nulo fornecido.");
+        } 
+        
         episodios.add(episodio);
     }
 }

@@ -7,10 +7,10 @@ public class Episodio {
 
     public Episodio(String titulo, int duracaoMinutos) {
         if (titulo == null || titulo.isBlank()) {
-            throw new IllegalArgumentException("Título de episódio inválido.");
+            throw new IllegalArgumentException("Erro na adição de título do episódio: valor nulo fornecido.");
         }
         if (duracaoMinutos <= 0) {
-            throw new IllegalArgumentException("Duração deve ser maior que zero.");
+            throw new IllegalArgumentException("Erro na adição de duração do episódio: valor menor ou igual a zero fornecido.");
         }
 
         this.titulo = titulo;

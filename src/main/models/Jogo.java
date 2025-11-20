@@ -11,6 +11,15 @@ public class Jogo extends Conteudo {
 
     public Jogo(String titulo, LocalDate dataLanc, String genero, String desenvolvedora) {
         super(titulo, dataLanc);
+        
+        if (genero == null || genero.isBlank()) {
+            throw new IllegalArgumentException("Gênero não pode ser vazio!");
+        }
+
+        if (desenvolvedora == null || desenvolvedora.isBlank()) {
+            throw new IllegalArgumentException("Desenvolveroda não pode ser vazio!");
+        }
+
         this.genero = genero;
         this.desenvolvedora = desenvolvedora;
     }

@@ -14,6 +14,11 @@ public class Serie extends Conteudo {
     }
 
     public void adicionarTemporada(Temporada temporada) {
+
+        if (temporada == null){
+            throw new IllegalArgumentException("Erro na adição de tempotada: valor nulo fornecido.");
+        } 
+
         temporadas.add(temporada);
     }
 
