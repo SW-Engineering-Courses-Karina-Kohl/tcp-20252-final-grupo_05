@@ -1,6 +1,12 @@
 package main.models;
 
 public interface Avaliador {
-    // adicionar tipo de saída e parâmetros posteriormente pois dependem de classes ainda não criadas.
-    public void avaliar(); 
+
+    /*
+    * @param conteudo(Filme, Serie, etc) a ser avaliado
+    * @param nota valor numerico para avaliacao
+    * @param comentario texto sobre o conteudo
+    * @return um objeto avaliacao contendo os dados da avaliacao
+    */
+    Avaliacao avaliar(Conteudo conteudo, int nota, String comentario);
 }
