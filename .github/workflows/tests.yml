@@ -1,0 +1,42 @@
+name: Testes Avaliacao de Conteudo
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fazer checkout do código
+        uses: actions/checkout@v3
+
+      - name: Instalar Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Instalar JUnit 5
+        run: |
+          mkdir -p lib
+          curl -L -o lib/junit-platform-console-standalone.jar \
+            https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.2/junit-platform-console-standalone-1.10.2.jar
+
+      - name: Compilar testes
+        run: |
+          mkdir -p out
+          javac -cp "lib/junit-platform-console-standalone.jar" \
+            -d out \
+            $(find src -name "*.java")
+
+      - name: Rodar testes
+        run: |
+          java -jar lib/junit-platform-console-standalone.jar \
+            --class-path out \
+            --scan-class-path
