@@ -21,6 +21,8 @@ public class Arigo extends Pessoa implements Avaliador {
 
         conteudo.adicionarAvaliacao(novaAvaliacao);
 
+        this.registrarAvaliacao(novaAvaliacao);
+
         return novaAvaliacao;
     }
 }
