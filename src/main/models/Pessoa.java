@@ -1,7 +1,10 @@
 package main.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
 
 public abstract class Pessoa {
 
@@ -10,12 +13,16 @@ public abstract class Pessoa {
     private LocalDate dataNasc;
     private String email;
 
+    private List<Avaliacao> listaAvaliacoes;
+
     public Pessoa(String nome, LocalDate dataNasc, String email){
         this.nome = nome;
         this.dataNasc = dataNasc;
         this.email = email;
-
+        
         this.id = UUID.randomUUID(); //gera id randomico para cada nova instancia
+        this.listaAvaliacoes = new ArrayList<>();
+    
     }
 
     // GETTERS E SETTERS
@@ -52,4 +59,11 @@ public abstract class Pessoa {
         this.email = email;
     }
   
+    protected void registrarAvaliacao(Avaliacao avaliacao) {
+        this.listaAvaliacoes.add(avaliacao);
+    }
+
+    public List<Avaliacao> getListaAvaliacoes() {
+        return listaAvaliacoes;
+    }
 }
