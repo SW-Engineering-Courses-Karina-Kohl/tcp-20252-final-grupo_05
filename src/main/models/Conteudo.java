@@ -11,6 +11,15 @@ public abstract class Conteudo {
     private List<Avaliacao> avaliacoes;
 
     public Conteudo(String titulo, LocalDate dataLanc) {
+
+        if (titulo == null || titulo.isBlank()) {
+            throw new IllegalArgumentException("Título não pode ser nulo");
+        }
+
+        if (dataLanc == null) {
+            throw new IllegalArgumentException("Data de lançamento não pode ser nula");
+        }
+
         this.titulo = titulo;
         this.dataLanc = dataLanc;
         this.avaliacoes = new ArrayList<>();
@@ -48,11 +57,6 @@ public abstract class Conteudo {
         this.dataLanc = dataLanc;
     }
 
-    /**
-    * método (exemplo) 
-    * Requisito Funcional RF-5.
-    * @return média ponderada das notas.
-    
     public double calcularMediaPonderada() {
         if (avaliacoes.isEmpty()) {
             return 0.0;
@@ -66,8 +70,14 @@ public abstract class Conteudo {
             somaPesos += aval.getPeso();
         }
 
-        return somaNotasPonderadas / somaPesos;
+        if (somaPesos == 0) {
+            throw new IllegalStateException("Não é possível calcular a média: soma de pesos igual a zero.");
+        }
+
+        double mediaPonderada = somaNotasPonderadas / somaPesos;
+
+        return mediaPonderada;
     }
-    */
+
 
 }
