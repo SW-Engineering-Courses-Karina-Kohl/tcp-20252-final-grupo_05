@@ -1,10 +1,11 @@
-package teste;
+package test;
 
 import main.models.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class AvaliacaoConteudoTest {
 
@@ -19,15 +20,15 @@ public class AvaliacaoConteudoTest {
 
         critico.avaliar(filme, 6, "Regular");
 
-        double esperado = (8*1 + 6*2) / 3.0;
+        double esperado = (8 * 1 + 6 * 2) / 3.0;
 
-        assertEquals(esperado, filme.calcularMediaPonderada());
+        assertEquals(esperado, filme.calcularMediaPonderada(), 0.0001);
     }
 
     @Test
     void deveRetornarZeroQuandoNaoHaAvaliacoes() {
         Filme filme = new Filme("Sem Avaliações", LocalDate.now(), 90, "Diretor");
-        assertEquals(0.0, filme.calcularMediaPonderada());
+        assertEquals(0.0, filme.calcularMediaPonderada(), 0.0001);
     }
 
     @Test
@@ -35,7 +36,7 @@ public class AvaliacaoConteudoTest {
         Filme filme = new Filme("Erro de Peso", LocalDate.now(), 100, "Diretor");
 
         // Avaliação com peso zero proposital
-        Avaliacao invalida = new Avaliacao(10, 0, "Invalida", 1);
+        Avaliacao invalida = new Avaliacao(10, 0, "Invalida", UUID.randomUUID());
         filme.adicionarAvaliacao(invalida);
 
         assertThrows(IllegalStateException.class, filme::calcularMediaPonderada);
