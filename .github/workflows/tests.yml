@@ -31,9 +31,8 @@ jobs:
       - name: Compilar testes
         run: |
           mkdir -p out
-          javac -cp "lib/junit-platform-console-standalone.jar" \
-            -d out \
-            $(find src -name "*.java")
+          find src -name "*.java" > sources.txt
+          javac -cp "lib/junit-platform-console-standalone.jar" -d out @sources.txt
 
       - name: Rodar testes
         run: |
