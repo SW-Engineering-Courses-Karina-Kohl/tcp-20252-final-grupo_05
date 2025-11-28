@@ -19,9 +19,16 @@ public class Critico extends Pessoa implements Avaliador {
     */
     @Override
     public Avaliacao avaliar(Conteudo conteudo, int nota, String comentario) {
+
+        if(nota < 1 || nota > 5) {
+            throw new IllegalArgumentException("A nota deve ser entre 1 e 5");
+        }
+
         Avaliacao novaAvaliacao = new Avaliacao(nota, PESO_AVALIACAO, comentario, this.getId());
         
         conteudo.adicionarAvaliacao(novaAvaliacao);
+
+        this.registrarAvaliacao(novaAvaliacao);
 
         return novaAvaliacao;
     }
