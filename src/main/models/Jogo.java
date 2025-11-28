@@ -17,7 +17,7 @@ public class Jogo extends Conteudo {
         }
 
         if (desenvolvedora == null || desenvolvedora.isBlank()) {
-            throw new IllegalArgumentException("Desenvolveroda não pode ser vazio!");
+            throw new IllegalArgumentException("Desenvolvedora não pode ser vazia!");
         }
 
         this.genero = genero;
