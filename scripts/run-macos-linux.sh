@@ -37,6 +37,8 @@ javac -cp "$CLASSPATH" -d bin src/main/*.java src/main/ui/*.java src/main/models
 
 echo ""
 echo "[3/3] Executando Aplicacao..."
-java -Dtinylog.configuration="$LOG_CONFIG" -cp "$CLASSPATH" main.Main
+# CLASSPATH para execução: precisa incluir bin/ onde estão os .class compilados
+RUNTIME_CLASSPATH="lib/tinylog-api-2.7.0.jar:lib/tinylog-impl-2.7.0.jar:bin:src/resources:."
+java -Dtinylog.configuration="$LOG_CONFIG" -cp "$RUNTIME_CLASSPATH" main.Main
 
 # a funcao cleanup roda automaticamente aqui
