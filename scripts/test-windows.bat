@@ -10,8 +10,7 @@ set CLASSPATH=lib\junit-platform-console-standalone-1.10.2.jar;lib\tinylog-api-2
 set LOG_CONFIG=config\tinylog.properties
 
 echo.
-echo [1/3] PREPARANDO AMBIENTE
-echo ------------------------------------------
+echo [1/3] Preparando Ambiente...
 
 :: Cria pasta bin para os .class (para não sujar a raiz)
 if not exist "bin" mkdir bin
@@ -26,8 +25,7 @@ if exist "src\resources\data\*.csv" (
     echo [AVISO] CSVs nao encontrados em src\resources\data.
 )
 echo.
-echo [2/3] COMPILANDO OS ARQUIVOS
-echo ------------------------------------------
+echo [2/3] Compilando os Arquivos...
 :: o parametro '-d bin' joga a sujeira (.class) para dentro da pasta bin
 javac -cp "%CLASSPATH%" -d bin src\main\*.java src\main\ui\*.java src\main\models\*.java src\main\service\*.java
 
@@ -45,8 +43,7 @@ if exist "src\test" (
 )
 
 echo.
-echo [3/3] EXECUTANDO TESTES
-echo ------------------------------------------
+echo [3/3] Executando Testes...
 java -Dtinylog.configuration="%LOG_CONFIG%" -jar lib\junit-platform-console-standalone-1.10.2.jar execute --scan-classpath --classpath "%CLASSPATH%" --details=tree
 
 :cleanup
