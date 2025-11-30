@@ -28,9 +28,8 @@ public class ServicoPromocao {
 
         if (totalLikes >= LIMITE_LIKES) {
             //Passa as informacoes do usuario de um objeto Arigo para um objeto Crítico.
-            Critico novoCritico = new Critico(arigo.getNome(), arigo.getDataNasc(), arigo.getEmail());
-
-            novoCritico.setId(arigo.getId()); //mantém mesmo ID.
+            // Mantém mesmo ID e data de criação
+            Critico novoCritico = new Critico(arigo.getId(), arigo.getDataCriacao(), arigo.getNome(), arigo.getDataNasc(), arigo.getEmail());
 
             Logger.info("Usuário {} promovido a crítico. Total de likes: {}.", arigo.getId(), totalLikes);
 

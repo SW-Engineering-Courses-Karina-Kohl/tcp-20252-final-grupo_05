@@ -20,6 +20,13 @@ public class Critico extends Pessoa implements Avaliador {
     }
 
     /**
+     * Construtor com ID e data de criação. Define senha padrão.
+     */
+    public Critico(UUID id, LocalDate dataCriacao, String nome, LocalDate dataNasc, String email) {
+        super(id, dataCriacao, nome, dataNasc, email, Pessoa.SENHA_PADRAO);
+    }
+
+    /**
      * Construtor com ID e senha.
      */
     public Critico(UUID id, String nome, LocalDate dataNasc, String email, String senha) {

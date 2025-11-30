@@ -43,7 +43,11 @@ public class Main {
             frame.add(painelPrincipal);
 
             try {
-                cardLayout.show(painelPrincipal, "LOGIN");
+                if (autenticacao.estaAutenticado()) {
+                    cardLayout.show(painelPrincipal, "HOME");
+                } else {
+                    cardLayout.show(painelPrincipal, "LOGIN");
+                }
                 Logger.info("Interface gráfica carregada. Exibindo tela de login.");
                 frame.setVisible(true);
             } catch (Exception e) {

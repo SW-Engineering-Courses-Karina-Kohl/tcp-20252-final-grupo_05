@@ -1,6 +1,5 @@
 package main.models;
 
-import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
@@ -9,11 +8,10 @@ import java.util.List;
 import java.util.UUID;
 
 
-public abstract class Pessoa implements Serializable {
+public abstract class Pessoa extends ContextEntity {
     private static final long serialVersionUID = 1L;
-    private static final String SENHA_PADRAO = "senha123";
+    protected static final String SENHA_PADRAO = "senha123";
 
-    private UUID id;
     private String nome;
     private LocalDate dataNasc;
     private String email;
@@ -33,11 +31,17 @@ public abstract class Pessoa implements Serializable {
      * Construtor com ID e senha.
      */
     public Pessoa(UUID id, String nome, LocalDate dataNasc, String email, String senha){
+        this(id, null, nome, dataNasc, email, senha);
+    }
+
+    /**
+     * Construtor com ID, data de criação e senha.
+     */
+    public Pessoa(UUID id, LocalDate dataCriacao, String nome, LocalDate dataNasc, String email, String senha){
+        super(id, dataCriacao);
         this.nome = nome;
         this.dataNasc = dataNasc;
         this.email = email;
-        
-        this.id = (id != null) ? id : UUID.randomUUID();
         this.senhaHash = hashSenha(senha);
         this.listaAvaliacoes = new ArrayList<>();
     }
@@ -58,14 +62,6 @@ public abstract class Pessoa implements Serializable {
     }
 
     // GETTERS E SETTERS
-
-     public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;

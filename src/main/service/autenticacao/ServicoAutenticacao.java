@@ -21,11 +21,32 @@ public class ServicoAutenticacao implements Autenticacao {
      * @param context O contexto contendo os repositórios
      */
     public ServicoAutenticacao(Context context) {
+        this(context, false);
+    }
+
+    /**
+     * Construtor que recebe o contexto da aplicação e flag de debug.
+     * Se debug for true, autentica automaticamente o usuário mais recente.
+     * 
+     * @param context O contexto contendo os repositórios
+     * @param debug Se true, autentica automaticamente o usuário mais recente
+     */
+    public ServicoAutenticacao(Context context, boolean debug) {
         if (context == null) {
             throw new IllegalArgumentException("Context não pode ser nulo");
         }
         this.context = context;
         this.pessoaAutenticada = null;
+        
+        if (debug) {
+            Pessoa maisRecente = context.pessoas.getMaisRecente();
+            if (maisRecente != null) {
+                this.pessoaAutenticada = maisRecente;
+                Logger.info("Modo debug ativado. Usuário mais recente autenticado automaticamente: {}", maisRecente.getEmail());
+            } else {
+                Logger.warn("Modo debug ativado, mas nenhum usuário encontrado no repositório.");
+            }
+        }
     }
 
     @Override
@@ -62,6 +83,7 @@ public class ServicoAutenticacao implements Autenticacao {
         // Para registro, usamos data de nascimento padrão (18 anos atrás)
         LocalDate dataNasc = LocalDate.now().minusYears(18);
         Arigo novoArigo = new Arigo(nome, dataNasc, email, senha);
+        this.pessoaAutenticada = novoArigo;
         
         try {
             context.pessoas.add(novoArigo);
