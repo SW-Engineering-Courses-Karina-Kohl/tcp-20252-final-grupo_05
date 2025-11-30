@@ -479,15 +479,41 @@ public class TelaDetalhes extends JPanel {
         areaComentario.setBorder(null);
         card.add(areaComentario);
         
-        // Likes
-        if (avaliacao.getLikes() > 0) {
-            card.add(Box.createVerticalStrut(10));
-            JLabel labelLikes = new JLabel("❤️ " + avaliacao.getLikes() + 
+        // Likes e botão de like
+        card.add(Box.createVerticalStrut(10));
+        JPanel painelLikes = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        painelLikes.setBackground(new Color(250, 250, 250));
+        
+        JLabel labelLikes = new JLabel("❤️ " + avaliacao.getLikes() + 
+            (avaliacao.getLikes() == 1 ? " like" : " likes"));
+        labelLikes.setFont(new Font("Arial", Font.PLAIN, 12));
+        labelLikes.setForeground(new Color(150, 150, 150));
+        painelLikes.add(labelLikes);
+        
+        JButton botaoLike = new JButton("👍 Curtir");
+        botaoLike.setFont(new Font("Arial", Font.PLAIN, 12));
+        botaoLike.setBackground(new Color(70, 130, 180));
+        botaoLike.setForeground(Color.WHITE);
+        botaoLike.setOpaque(true);
+        botaoLike.setBorderPainted(false);
+        botaoLike.setContentAreaFilled(true);
+        botaoLike.setFocusPainted(false);
+        botaoLike.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        botaoLike.setPreferredSize(new Dimension(100, 25));
+        botaoLike.addActionListener(e -> {
+            avaliacao.adicionarLike();
+            labelLikes.setText("❤️ " + avaliacao.getLikes() + 
                 (avaliacao.getLikes() == 1 ? " like" : " likes"));
-            labelLikes.setFont(new Font("Arial", Font.PLAIN, 12));
-            labelLikes.setForeground(new Color(150, 150, 150));
-            card.add(labelLikes);
-        }
+            try {
+                context.save();
+                Logger.info("Like adicionado à avaliação. Total: {}", avaliacao.getLikes());
+            } catch (Exception ex) {
+                Logger.error(ex, "Erro ao salvar contexto após adicionar like");
+            }
+        });
+        painelLikes.add(botaoLike);
+        
+        card.add(painelLikes);
         
         return card;
     }
