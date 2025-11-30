@@ -8,10 +8,11 @@ public class Arigo extends Pessoa implements Avaliador {
     
     public Arigo(String nome, LocalDate dataNasc, String email){
         super(nome, dataNasc, email);
+        // herda um ID criado pela classe base Pessoa automaticamente
     }
 
     @Override
-    public  Avaliacao avaliar(Conteudo conteudo, int nota, String comentario) {
+    public Avaliacao avaliar(Conteudo conteudo, int nota, String comentario) {
 
         if(nota < 1 || nota > 5) {
             throw new IllegalArgumentException("A nota deve ser entre 1 e 5");
