@@ -2,6 +2,7 @@ package main.ui;
 
 import main.models.*;
 import main.service.Context;
+import main.service.ServicoPromocao;
 import main.service.autenticacao.Autenticacao;
 import org.tinylog.Logger;
 
@@ -16,6 +17,7 @@ public class TelaDetalhes extends JPanel {
     private Autenticacao autenticacao;
     private GerenciadorTelas gerenciadorTelas;
     private Conteudo conteudoAtual;
+    private ServicoPromocao servicoPromocao;
     
     private JPanel painelPrincipal;
     private JTextArea campoComentario;
@@ -26,6 +28,7 @@ public class TelaDetalhes extends JPanel {
     public TelaDetalhes(Context context, Autenticacao autenticacao) {
         this.context = context;
         this.autenticacao = autenticacao;
+        this.servicoPromocao = new ServicoPromocao();
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
         
@@ -444,18 +447,24 @@ public class TelaDetalhes extends JPanel {
         JPanel cabecalho = new JPanel(new BorderLayout());
         cabecalho.setBackground(new Color(250, 250, 250));
         
-        // Buscar nome do usuário
+        // Buscar nome do usuário e tipo
         String nomeUsuario = "Usuário";
+        String tipoUsuario = "";
         try {
             Pessoa pessoa = context.pessoas.getById(avaliacao.getIdUsuario());
             if (pessoa != null) {
                 nomeUsuario = pessoa.getNome();
+                if (pessoa instanceof Arigo) {
+                    tipoUsuario = " (Arigó)";
+                } else if (pessoa instanceof Critico) {
+                    tipoUsuario = " (Crítico)";
+                }
             }
         } catch (Exception e) {
             Logger.warn("Erro ao buscar nome do usuário: {}", e.getMessage());
         }
         
-        JLabel labelUsuario = new JLabel(nomeUsuario);
+        JLabel labelUsuario = new JLabel(nomeUsuario + tipoUsuario);
         labelUsuario.setFont(new Font("Arial", Font.BOLD, 14));
         labelUsuario.setForeground(new Color(70, 130, 180));
         cabecalho.add(labelUsuario, BorderLayout.WEST);
@@ -505,6 +514,9 @@ public class TelaDetalhes extends JPanel {
             labelLikes.setText("❤️ " + avaliacao.getLikes() + 
                 (avaliacao.getLikes() == 1 ? " like" : " likes"));
             try {
+                // Tenta promover o dono da avaliação se for Arigo e tiver likes suficientes
+                servicoPromocao.tentarPromover(context, avaliacao.getIdUsuario());
+                
                 context.save();
                 Logger.info("Like adicionado à avaliação. Total: {}", avaliacao.getLikes());
             } catch (Exception ex) {
