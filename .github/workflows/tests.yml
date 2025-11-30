@@ -41,5 +41,5 @@ jobs:
       - name: Rodar testes
         run: |
           java -jar lib/junit-platform-console-standalone.jar \
-            --class-path "out:src/resources" \
+            --class-path "out:src/resources:lib/tinylog-api-2.7.0.jar:lib/tinylog-impl-2.7.0.jar" \
             --scan-class-path
