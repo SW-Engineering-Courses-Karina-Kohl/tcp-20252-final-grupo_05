@@ -35,48 +35,91 @@ public class Context implements Serializable {
     }
 
     /**
-     * Initializes all repositories using CarregadorDeDados.
-     * Loads data from CSV files into the repositories.
+     * Initializes a context by first trying to load from disk.
+     * If no saved data exists, loads from CarregadorDeDados and saves it.
      * 
-     * @param carregador The CarregadorDeDados instance to load data from
+     * @param carregador The CarregadorDeDados instance to load initial data from if needed
+     * @return The initialized Context instance
      */
-    public void initialize(CarregadorDeDados carregador) {
+    public static Context initialize(CarregadorDeDados carregador) {
         if (carregador == null) {
             throw new IllegalArgumentException("CarregadorDeDados cannot be null");
         }
 
+        Context context;
+        if (hasSavedData()) {
+            try {
+                context = load();
+                Logger.info("Contexto carregado do disco. Total de pessoas: {}, filmes: {}, livros: {}, jogos: {}, séries: {}.",
+                    context.pessoas.findAll().size(),
+                    context.filmes.findAll().size(),
+                    context.livros.findAll().size(),
+                    context.jogos.findAll().size(),
+                    context.series.findAll().size());
+            } catch (IOException | ClassNotFoundException e) {
+                Logger.warn(e, "Erro ao carregar contexto do disco. Carregando dados iniciais do CarregadorDeDados.");
+                context = new Context();
+                loadFromCarregador(context, carregador);
+                try {
+                    context.save();
+                    Logger.info("Contexto inicializado do CarregadorDeDados e salvo em disco.");
+                } catch (IOException saveException) {
+                    Logger.error(saveException, "Erro ao salvar contexto após inicialização do CarregadorDeDados.");
+                }
+            }
+        } else {
+            Logger.info("Nenhum contexto salvo encontrado. Carregando dados iniciais do CarregadorDeDados.");
+            context = new Context();
+            loadFromCarregador(context, carregador);
+            try {
+                context.save();
+                Logger.info("Contexto inicializado do CarregadorDeDados e salvo em disco.");
+            } catch (IOException saveException) {
+                Logger.error(saveException, "Erro ao salvar contexto após inicialização do CarregadorDeDados.");
+            }
+        }
+        return context;
+    }
+
+    /**
+     * Loads data from CarregadorDeDados into the context repositories.
+     * 
+     * @param context The context to populate
+     * @param carregador The CarregadorDeDados instance to load data from
+     */
+    private static void loadFromCarregador(Context context, CarregadorDeDados carregador) {
         Logger.info("Inicializando contexto com dados do CarregadorDeDados.");
 
         // Clear existing data and load from CarregadorDeDados
         List<Pessoa> pessoasList = carregador.carregarUsuarios();
-        this.pessoas.getAll().clear();
-        this.pessoas.getAll().addAll(pessoasList);
+        context.pessoas.getAll().clear();
+        context.pessoas.getAll().addAll(pessoasList);
 
         List<Filme> filmesList = carregador.carregarFilmes();
-        this.filmes.getAll().clear();
-        this.filmes.getAll().addAll(filmesList);
+        context.filmes.getAll().clear();
+        context.filmes.getAll().addAll(filmesList);
 
         List<Livro> livrosList = carregador.carregarLivros();
-        this.livros.getAll().clear();
-        this.livros.getAll().addAll(livrosList);
+        context.livros.getAll().clear();
+        context.livros.getAll().addAll(livrosList);
 
         List<Jogo> jogosList = carregador.carregarJogos();
-        this.jogos.getAll().clear();
-        this.jogos.getAll().addAll(jogosList);
+        context.jogos.getAll().clear();
+        context.jogos.getAll().addAll(jogosList);
 
         List<Serie> seriesList = carregador.carregarSeriesCompletas();
-        this.series.getAll().clear();
-        this.series.getAll().addAll(seriesList);
+        context.series.getAll().clear();
+        context.series.getAll().addAll(seriesList);
 
         // Avaliacoes are not loaded from CSV, so keep empty
-        this.avaliacoes.getAll().clear();
+        context.avaliacoes.getAll().clear();
 
         Logger.info("Contexto inicializado. Total de pessoas: {}, filmes: {}, livros: {}, jogos: {}, séries: {}.",
-            pessoas.findAll().size(),
-            filmes.findAll().size(),
-            livros.findAll().size(),
-            jogos.findAll().size(),
-            series.findAll().size());
+            context.pessoas.findAll().size(),
+            context.filmes.findAll().size(),
+            context.livros.findAll().size(),
+            context.jogos.findAll().size(),
+            context.series.findAll().size());
     }
 
     /**

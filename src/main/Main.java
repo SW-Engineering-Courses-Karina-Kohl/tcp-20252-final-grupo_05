@@ -4,7 +4,6 @@ import main.ui.*;
 import main.service.*;
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import org.tinylog.Logger;
 
 public class Main {
@@ -12,30 +11,9 @@ public class Main {
     public static void main(String[] args) {
         Logger.info("Aplicação iniciada. Iniciando configuração da interface gráfica.");
 
-        // 1 - Tentar carregar contexto do disco
-        // 2 - Se não houver dados salvos, usar CarregadorDeDados para carregar dados iniciais
-        Context context;
-        if (Context.hasSavedData()) {
-            try {
-                context = Context.load();
-                Logger.info("Contexto carregado do disco. Total de pessoas: {}, filmes: {}, livros: {}, jogos: {}, séries: {}.",
-                    context.pessoas.findAll().size(),
-                    context.filmes.findAll().size(),
-                    context.livros.findAll().size(),
-                    context.jogos.findAll().size(),
-                    context.series.findAll().size());
-            } catch (IOException | ClassNotFoundException e) {
-                Logger.warn(e, "Erro ao carregar contexto do disco. Carregando dados iniciais do CarregadorDeDados.");
-                context = new Context();
-                CarregadorDeDados carregador = new CarregadorDeDados();
-                context.initialize(carregador);
-            }
-        } else {
-            Logger.info("Nenhum contexto salvo encontrado. Carregando dados iniciais do CarregadorDeDados.");
-            context = new Context();
-            CarregadorDeDados carregador = new CarregadorDeDados();
-            context.initialize(carregador);
-        }
+        // Inicializar contexto (carrega do disco se existir, senão usa CarregadorDeDados)
+        CarregadorDeDados carregador = new CarregadorDeDados();
+        Context context = Context.initialize(carregador);
 
         // 3 - Iniciar interface gráfica
         SwingUtilities.invokeLater(() -> {
