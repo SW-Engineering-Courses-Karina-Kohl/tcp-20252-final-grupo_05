@@ -101,14 +101,25 @@ public class TelaInicial extends JPanel {
         tituloDestaque.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
         conteudo.add(tituloDestaque, BorderLayout.NORTH);
         
-        // Painel com cards
-        JPanel painelCards = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+        // Painel com cards (layout vertical para empilhar cards em linha)
+        JPanel painelCards = new JPanel();
+        painelCards.setLayout(new BoxLayout(painelCards, BoxLayout.Y_AXIS));
         painelCards.setBackground(new Color(245, 245, 245));
         
-        // Criar 4 cards vazios
+        // Criar 4 cards com título mockado e imagem placeholder
+        String[] titulosMockados = {
+            "Filme Exemplo 1",
+            "Série Exemplo 2",
+            "Livro Exemplo 3",
+            "Jogo Exemplo 4"
+        };
+        
         for (int i = 0; i < 4; i++) {
-            JPanel card = criarCardVazio();
+            JPanel card = criarCardComConteudo(titulosMockados[i]);
             painelCards.add(card);
+            if (i < 3) {
+                painelCards.add(Box.createVerticalStrut(20)); // Espaçamento entre cards
+            }
         }
         
         conteudo.add(painelCards, BorderLayout.CENTER);
@@ -117,13 +128,40 @@ public class TelaInicial extends JPanel {
     }
     
     /**
-     * Cria um card vazio com borda e tamanho fixo.
+     * Cria um card com largura total, imagem placeholder e título mockado.
      */
-    private JPanel criarCardVazio() {
-        JPanel card = new JPanel();
-        card.setPreferredSize(new Dimension(200, 300));
+    private JPanel criarCardComConteudo(String titulo) {
+        JPanel card = new JPanel(new BorderLayout(15, 0));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150)); // Largura total, altura fixa
+        
+        // Placeholder de imagem à esquerda
+        JPanel placeholderImagem = new JPanel();
+        placeholderImagem.setPreferredSize(new Dimension(200, 150));
+        placeholderImagem.setBackground(new Color(230, 230, 230));
+        placeholderImagem.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+        
+        // Label "Imagem" no centro do placeholder
+        JLabel labelImagem = new JLabel("Imagem", SwingConstants.CENTER);
+        labelImagem.setFont(new Font("Arial", Font.PLAIN, 12));
+        labelImagem.setForeground(new Color(150, 150, 150));
+        placeholderImagem.setLayout(new BorderLayout());
+        placeholderImagem.add(labelImagem, BorderLayout.CENTER);
+        
+        card.add(placeholderImagem, BorderLayout.WEST);
+        
+        // Conteúdo à direita (título)
+        JPanel painelConteudo = new JPanel(new BorderLayout());
+        painelConteudo.setBackground(Color.WHITE);
+        painelConteudo.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        
+        JLabel labelTitulo = new JLabel(titulo);
+        labelTitulo.setFont(new Font("Arial", Font.BOLD, 18));
+        labelTitulo.setForeground(new Color(50, 50, 50));
+        
+        painelConteudo.add(labelTitulo, BorderLayout.NORTH);
+        card.add(painelConteudo, BorderLayout.CENTER);
         
         return card;
     }
