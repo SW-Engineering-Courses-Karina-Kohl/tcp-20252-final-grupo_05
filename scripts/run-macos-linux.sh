@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 # caminho para configuracao do Log
 LOG_CONFIG="config/tinylog.properties"
 
-CLASSPATH="lib/tinylog-api-2.7.0.jar:lib/tinylog-impl-2.7.0.jar:src/main:."
+CLASSPATH="lib/tinylog-api-2.7.0.jar:lib/tinylog-impl-2.7.0.jar:src/main:src/resources:."
 
 echo "Compilando classes principais..."
 

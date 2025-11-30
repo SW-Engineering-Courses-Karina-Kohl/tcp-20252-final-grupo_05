@@ -1,0 +1,37 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "compile-with-script",
+            "type": "shell",
+            "command": "javac",
+            "args": [
+                "-cp",
+                "lib/tinylog-api-2.7.0.jar:lib/tinylog-impl-2.7.0.jar:src/main:src/resources:.",
+                "-d",
+                ".",
+                "src/main/*.java",
+                "src/main/ui/*.java",
+                "src/main/models/*.java",
+                "src/main/service/*.java"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "run-script",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/run-macos-linux.sh",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
+

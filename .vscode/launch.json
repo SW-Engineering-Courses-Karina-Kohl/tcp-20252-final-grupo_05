@@ -5,10 +5,32 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Rodar ArigóFlix (Script)",
       "type": "java",
-      "name": "Rodar ArigóFlix",
       "request": "launch",
-      "mainClass": ""
+      "mainClass": "main.Main",
+      "projectName": "tcp-20252-final-grupo_05",
+      "preLaunchTask": "run-script",
+      "internalConsoleOptions": "neverOpen",
+      "console": "internalConsole"
+    },
+    {
+      "type": "java",
+      "name": "Rodar ArigóFlix (Extension)",
+      "request": "launch",
+      "mainClass": "main.Main",
+      "projectName": "tcp-20252-final-grupo_05",
+      "classPaths": [
+        "lib/tinylog-api-2.7.0.jar",
+        "lib/tinylog-impl-2.7.0.jar",
+        "src/main",
+        "src/resources",
+        "."
+      ],
+      "modulePaths": [],
+      "vmArgs": "-Dtinylog.configuration=config/tinylog.properties",
+      "args": "",
+      "preLaunchTask": "compile-with-script"
     },
     {
       "type": "java",
