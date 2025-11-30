@@ -1,15 +1,25 @@
 package main.models;
 
 import java.time.LocalDate;
+import java.util.UUID;
 import org.tinylog.Logger;
 
 public class Arigo extends Pessoa implements Avaliador {
 
     private static final int PESO_AVALIACAO = 1;
     
+    /**
+     * Construtor com ID opcional. Se o ID for null, gera um UUID aleatório.
+     */
+    public Arigo(UUID id, String nome, LocalDate dataNasc, String email){
+        super(id, nome, dataNasc, email);
+    }
+    
+    /**
+     * Construtor sem ID. Gera um UUID aleatório automaticamente.
+     */
     public Arigo(String nome, LocalDate dataNasc, String email){
         super(nome, dataNasc, email);
-        // herda um ID criado pela classe base Pessoa automaticamente
     }
 
     @Override

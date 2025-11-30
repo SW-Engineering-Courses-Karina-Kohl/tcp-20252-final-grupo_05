@@ -3,15 +3,20 @@ package main.models;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.tinylog.Logger;
 
 public abstract class Conteudo {
 
+    private UUID id;
     private String titulo;
     private LocalDate dataLanc;
     private List<Avaliacao> avaliacoes;
 
-    public Conteudo(String titulo, LocalDate dataLanc) {
+    /**
+     * Construtor com ID opcional. Se o ID for null, gera um UUID aleatório.
+     */
+    public Conteudo(UUID id, String titulo, LocalDate dataLanc) {
 
         if (titulo == null || titulo.isBlank()) {
             Logger.error("Falha ao criar Conteudo: título inválido (nulo ou em branco).");
@@ -23,9 +28,17 @@ public abstract class Conteudo {
             throw new IllegalArgumentException("Data de lançamento não pode ser nula");
         }
 
+        this.id = (id != null) ? id : UUID.randomUUID();
         this.titulo = titulo;
         this.dataLanc = dataLanc;
         this.avaliacoes = new ArrayList<>();
+    }
+
+    /**
+     * Construtor sem ID. Gera um UUID aleatório automaticamente.
+     */
+    public Conteudo(String titulo, LocalDate dataLanc) {
+        this(null, titulo, dataLanc);
     }
 
     public void adicionarAvaliacao(Avaliacao avaliacao) {
@@ -39,6 +52,10 @@ public abstract class Conteudo {
     /* 
     * Getters
     */
+
+    public UUID getId() {
+        return id;
+    }
 
     public List<Avaliacao> getAvaliacoes() {
         return List.copyOf(this.avaliacoes);
@@ -55,6 +72,10 @@ public abstract class Conteudo {
     /* 
     * Setters
     */ 
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;

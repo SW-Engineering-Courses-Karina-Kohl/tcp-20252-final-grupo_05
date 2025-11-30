@@ -15,14 +15,23 @@ public abstract class Pessoa {
 
     private List<Avaliacao> listaAvaliacoes;
 
-    public Pessoa(String nome, LocalDate dataNasc, String email){
+    /**
+     * Construtor com ID opcional. Se o ID for null, gera um UUID aleatório.
+     */
+    public Pessoa(UUID id, String nome, LocalDate dataNasc, String email){
         this.nome = nome;
         this.dataNasc = dataNasc;
         this.email = email;
         
-        this.id = UUID.randomUUID(); //gera id randomico para cada nova instancia
+        this.id = (id != null) ? id : UUID.randomUUID();
         this.listaAvaliacoes = new ArrayList<>();
-    
+    }
+
+    /**
+     * Construtor sem ID. Gera um UUID aleatório automaticamente.
+     */
+    public Pessoa(String nome, LocalDate dataNasc, String email){
+        this(null, nome, dataNasc, email);
     }
 
     // GETTERS E SETTERS
