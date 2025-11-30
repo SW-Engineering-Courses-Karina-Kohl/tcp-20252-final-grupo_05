@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.tinylog.Logger;
 import main.models.*;
 
 public class CarregadorDeDados {
@@ -25,6 +26,7 @@ public class CarregadorDeDados {
     private BufferedReader lerArquivo(String caminho) {
         InputStream fluxoEntrada = getClass().getClassLoader().getResourceAsStream(caminho);
         if (fluxoEntrada == null) {
+            Logger.error("Arquivo não encontrado no classpath: {}", caminho);
             throw new RuntimeException("Arquivo não encontrado: " + caminho);
         }
         return new BufferedReader(new InputStreamReader(fluxoEntrada, StandardCharsets.UTF_8));
@@ -36,6 +38,8 @@ public class CarregadorDeDados {
 
     public List<Pessoa> carregarUsuarios() {
         List<Pessoa> listaDeUsuarios = new ArrayList<>();
+
+        Logger.info("Iniciando carregamento de usuários a partir de 'usuarios.csv'.");
 
         try (BufferedReader leitor = lerArquivo("data/usuarios.csv")){
             String linhaCSV;
@@ -58,7 +62,7 @@ public class CarregadorDeDados {
 
             }
         } catch (Exception e) {
-            System.err.println("Erro ao carregar usuarios: " + e.getMessage());
+            Logger.error(e, "Erro ao carregar usuários a partir de 'usuarios.csv'.");
         }
         return listaDeUsuarios;
     }
@@ -68,6 +72,8 @@ public class CarregadorDeDados {
      */
 
     public List<Conteudo> carregarTodosConteudos() {
+        Logger.info("Carregando todos os conteúdos: filmes, livros, jogos e séries.");
+
         List<Conteudo> catalogoDeConteudos = new ArrayList<>();
         catalogoDeConteudos.addAll(carregarFilmes());
         catalogoDeConteudos.addAll(carregarLivros());
@@ -79,6 +85,8 @@ public class CarregadorDeDados {
 
     private List<Filme> carregarFilmes() {
         List<Filme> filmes = new ArrayList<>();
+
+        Logger.info("Iniciando carregamento de filmes a partir de 'filmes.csv'.");
 
         try (BufferedReader leitor = lerArquivo("data/filmes.csv")) {
             String linhaCSV;
@@ -97,12 +105,14 @@ public class CarregadorDeDados {
 
         } catch (Exception e) {
             System.err.println("Erro ao carregar filmes: " + e.getMessage());
+            Logger.error(e, "Erro ao carregar filmes a partir de 'filmes.csv'.");
         }
         return filmes;
     }
 
     private List<Livro> carregarLivros() {
         List<Livro> livros = new ArrayList<>();
+        Logger.info("Iniciando carregamento de livros a partir de 'livros.csv'.");
         try (BufferedReader leitor = lerArquivo("data/livros.csv")) {
             String linhaCSV;
 
@@ -120,12 +130,15 @@ public class CarregadorDeDados {
 
         } catch (Exception e) {
             System.err.println("Erro ao carregar livros: " + e.getMessage());
+            Logger.error(e, "Erro ao carregar livros a partir de 'livros.csv'.");
         }
         return livros;
     }
 
     private List<Jogo> carregarJogos() {
         List<Jogo> jogos = new ArrayList<>();
+
+        Logger.info("Iniciando carregamento de jogos a partir de 'jogos.csv'.");
 
         try (BufferedReader leitor = lerArquivo("data/jogos.csv")) {
             String linhaCSV;
@@ -145,7 +158,7 @@ public class CarregadorDeDados {
             }
 
         } catch (Exception e) {
-            System.err.println("Erro ao carregar jogos: " + e.getMessage());
+            Logger.error(e, "Erro ao carregar jogos a partir de 'jogos.csv'.");
         }
         return jogos;
     }
@@ -155,6 +168,8 @@ public class CarregadorDeDados {
      */
     private List<Serie> carregarSeriesCompletas() {
         Map<Integer, Serie> mapaSeries = new HashMap<>();
+
+        Logger.info("Iniciando carregamento de séries a partir de 'series.csv' e 'episodios.csv'.");
 
         // Primeiro, lê as Séries.
         try (BufferedReader leitor = lerArquivo("data/series.csv")) {
@@ -171,7 +186,7 @@ public class CarregadorDeDados {
                 mapaSeries.put(id, serie);
             }
         } catch (Exception e) {
-            System.err.println("Erro ao carregar séries: " + e.getMessage());
+            Logger.error(e, "Erro ao carregar séries a partir de 'series.csv'.");
         }
 
         // Depois, lê os episodios e encaixa nas séries corretas.
@@ -198,10 +213,12 @@ public class CarregadorDeDados {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Erro ao carregar episódios: " + e.getMessage());
+            Logger.error(e, "Erro ao carregar episódios a partir de 'episodios.csv'.");
         }
 
-        return new ArrayList<>(mapaSeries.values());
+        List<Serie> series = new ArrayList<>(mapaSeries.values());
+        Logger.info("Carregamento de séries concluído. Total de séries carregadas: {}.", series.size());
+        return series;
     }
 
     // Garante que a série tenha pelo menos o número de temporadas especificado.
