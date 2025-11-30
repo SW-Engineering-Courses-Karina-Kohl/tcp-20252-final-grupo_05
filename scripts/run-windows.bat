@@ -14,7 +14,7 @@ set LOG_CONFIG=config\tinylog.properties
 
 echo.
 echo [1/3] Compilando para pasta temporaria 'bin'...
-javac -cp "%CLASSPATH%" -d bin src\main\*.java src\main\ui\*.java src\main\models\*.java src\main\service\*.java
+javac -cp "%CLASSPATH%" -d bin src\main\*.java src\main\ui\*.java src\main\models\*.java src\main\service\*.java src\main\service\autenticacao\*.java
 
 if %errorlevel% neq 0 (
     echo [ERRO] Falha na compilacao.

@@ -33,7 +33,7 @@ fi
 echo ""
 echo "[2/3] Compilando para pasta temporaria 'bin'..."
 # -d bin joga os .class para dentro da pasta bin
-javac -cp "$CLASSPATH" -d bin src/main/*.java src/main/ui/*.java src/main/models/*.java src/main/service/*.java
+javac -cp "$CLASSPATH" -d bin src/main/*.java src/main/ui/*.java src/main/models/*.java src/main/service/*.java src/main/service/autenticacao/*.java
 
 echo ""
 echo "[3/3] Executando Aplicacao..."

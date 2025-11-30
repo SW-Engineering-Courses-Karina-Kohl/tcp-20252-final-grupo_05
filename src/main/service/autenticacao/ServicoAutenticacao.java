@@ -1,4 +1,4 @@
-package main.autenticacao;
+package main.service.autenticacao;
 
 import main.models.Arigo;
 import main.models.Pessoa;
@@ -30,6 +30,21 @@ public class ServicoAutenticacao implements Autenticacao {
 
     @Override
     public void registrar(String email, String senha) throws EmailJaCadastradoException {
+        registrar("Usuário", email, senha);
+    }
+
+    /**
+     * Registra um novo usuário no sistema com nome.
+     * 
+     * @param nome O nome do usuário
+     * @param email O email do usuário
+     * @param senha A senha do usuário
+     * @throws EmailJaCadastradoException Se o email já estiver cadastrado
+     */
+    public void registrar(String nome, String email, String senha) throws EmailJaCadastradoException {
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("Nome não pode ser nulo ou vazio");
+        }
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("Email não pode ser nulo ou vazio");
         }
@@ -44,13 +59,12 @@ public class ServicoAutenticacao implements Autenticacao {
         }
 
         // Cria novo Arigo com os dados fornecidos
-        // Para registro, usamos valores padrão para nome e data de nascimento
-        // O usuário pode atualizar depois
-        LocalDate dataNasc = LocalDate.now().minusYears(18); // Data padrão: 18 anos atrás
-        Arigo novoArigo = new Arigo("Usuário", dataNasc, email, senha);
+        // Para registro, usamos data de nascimento padrão (18 anos atrás)
+        LocalDate dataNasc = LocalDate.now().minusYears(18);
+        Arigo novoArigo = new Arigo(nome, dataNasc, email, senha);
         
         context.pessoas.add(novoArigo);
-        Logger.info("Novo usuário registrado com email: {}", email);
+        Logger.info("Novo usuário registrado: {} ({})", nome, email);
     }
 
     @Override

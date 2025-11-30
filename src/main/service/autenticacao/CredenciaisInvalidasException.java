@@ -1,4 +1,4 @@
-package main.autenticacao;
+package main.service.autenticacao;
 
 /**
  * Exceção lançada quando as credenciais fornecidas (email ou senha) são inválidas.

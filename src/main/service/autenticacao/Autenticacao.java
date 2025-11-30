@@ -1,4 +1,4 @@
-package main.autenticacao;
+package main.service.autenticacao;
 
 import main.models.Pessoa;
 

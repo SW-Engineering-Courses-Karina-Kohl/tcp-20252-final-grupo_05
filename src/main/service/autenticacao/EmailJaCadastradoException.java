@@ -1,4 +1,4 @@
-package main.autenticacao;
+package main.service.autenticacao;
 
 /**
  * Exceção lançada quando se tenta registrar um email que já está cadastrado no sistema.
