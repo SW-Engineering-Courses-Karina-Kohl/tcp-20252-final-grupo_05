@@ -18,7 +18,7 @@ public class Main {
         Context context = Context.initialize(carregador);
 
         // Criar serviço de autenticação
-        Autenticacao autenticacao = new ServicoAutenticacao(context, false);
+        Autenticacao autenticacao = new ServicoAutenticacao(context, true);
 
         // 3 - Iniciar interface gráfica
         SwingUtilities.invokeLater(() -> {
@@ -34,21 +34,35 @@ public class Main {
             TelaCadastro telaCadastro = new TelaCadastro(autenticacao);
             TelaInicial telaInicial = new TelaInicial(autenticacao);
             TelaDetalhes telaDetalhes = new TelaDetalhes();
+            TelaFilmeLista telaFilmeLista = new TelaFilmeLista();
+            TelaLivroLista telaLivroLista = new TelaLivroLista();
+            TelaJogoLista telaJogoLista = new TelaJogoLista();
+            TelaSerieLista telaSerieLista = new TelaSerieLista();
             
             painelPrincipal.add(telaLogin, "LOGIN");
             painelPrincipal.add(telaCadastro, "CADASTRO");
             painelPrincipal.add(telaInicial, "HOME");
             painelPrincipal.add(telaDetalhes, "DETALHES");
+            painelPrincipal.add(telaFilmeLista, "FILME_LISTA");
+            painelPrincipal.add(telaLivroLista, "LIVRO_LISTA");
+            painelPrincipal.add(telaJogoLista, "JOGO_LISTA");
+            painelPrincipal.add(telaSerieLista, "SERIE_LISTA");
             
             // Criar gerenciador de telas
             GerenciadorTelas gerenciadorTelas = new GerenciadorTelas(
                 painelPrincipal, cardLayout,
-                telaLogin, telaCadastro, telaInicial, telaDetalhes
+                telaLogin, telaCadastro, telaInicial, telaDetalhes,
+                telaFilmeLista, telaLivroLista, telaJogoLista, telaSerieLista
             );
             
             // Passar gerenciador para as telas que precisam dele
             telaLogin.setGerenciadorTelas(gerenciadorTelas);
             telaCadastro.setGerenciadorTelas(gerenciadorTelas);
+            telaInicial.setGerenciadorTelas(gerenciadorTelas);
+            telaFilmeLista.setGerenciadorTelas(gerenciadorTelas);
+            telaLivroLista.setGerenciadorTelas(gerenciadorTelas);
+            telaJogoLista.setGerenciadorTelas(gerenciadorTelas);
+            telaSerieLista.setGerenciadorTelas(gerenciadorTelas);
             
             frame.add(painelPrincipal);
 

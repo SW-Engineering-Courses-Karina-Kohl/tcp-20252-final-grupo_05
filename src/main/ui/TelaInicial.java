@@ -11,6 +11,7 @@ public class TelaInicial extends JPanel {
     private Autenticacao autenticacao;
     private JTextField campoPesquisa;
     private JButton botaoUsuario;
+    private GerenciadorTelas gerenciadorTelas;
     
     public TelaInicial(Autenticacao autenticacao) {
         this.autenticacao = autenticacao;
@@ -79,44 +80,130 @@ public class TelaInicial extends JPanel {
     }
     
     /**
-     * Cria a área de conteúdo com título "Destaque" e cards.
+     * Cria a área de conteúdo com seções por tipo de conteúdo.
      */
     private JPanel criarConteudo() {
-        JPanel conteudo = new JPanel(new BorderLayout());
+        // Painel principal com scroll
+        JPanel conteudo = new JPanel();
+        conteudo.setLayout(new BoxLayout(conteudo, BoxLayout.Y_AXIS));
         conteudo.setBackground(new Color(245, 245, 245));
+        
+        // Dados mockados para cada tipo de conteúdo
+        String[] filmesMockados = {"Matrix", "Inception", "Interstellar", "Blade Runner 2049"};
+        String[] livrosMockados = {"1984", "O Senhor dos Anéis", "Duna", "Neuromancer"};
+        String[] jogosMockados = {"The Witcher 3", "Cyberpunk 2077", "Red Dead Redemption 2", "Elden Ring"};
+        String[] seriesMockados = {"Breaking Bad", "Game of Thrones", "Stranger Things", "The Crown"};
+        
+        // Criar seções para cada tipo de conteúdo
+        conteudo.add(criarSecaoConteudo("Filmes", "FILMES", filmesMockados));
+        conteudo.add(Box.createVerticalStrut(30));
+        conteudo.add(criarSecaoConteudo("Livros", "LIVROS", livrosMockados));
+        conteudo.add(Box.createVerticalStrut(30));
+        conteudo.add(criarSecaoConteudo("Jogos", "JOGOS", jogosMockados));
+        conteudo.add(Box.createVerticalStrut(30));
+        conteudo.add(criarSecaoConteudo("Séries", "SERIES", seriesMockados));
+        
+        // Adicionar padding
         conteudo.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         
-        // Título "Destaque"
-        JLabel tituloDestaque = new JLabel("Destaque");
-        tituloDestaque.setFont(new Font("Arial", Font.BOLD, 24));
-        tituloDestaque.setForeground(new Color(50, 50, 50));
-        tituloDestaque.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-        conteudo.add(tituloDestaque, BorderLayout.NORTH);
+        // Painel com scroll
+        JScrollPane scrollPane = new JScrollPane(conteudo);
+        scrollPane.setBorder(null);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
-        // Painel com cards (layout vertical para empilhar cards em linha)
+        JPanel painelPrincipal = new JPanel(new BorderLayout());
+        painelPrincipal.add(scrollPane, BorderLayout.CENTER);
+        
+        return painelPrincipal;
+    }
+    
+    /**
+     * Cria uma seção para um tipo específico de conteúdo.
+     * 
+     * @param tituloSecao O título da seção (ex: "Filmes")
+     * @param tipoConteudo O tipo de conteúdo para navegação (ex: "FILMES")
+     * @param titulosMockados Array com títulos mockados dos conteúdos
+     * @return JPanel com a seção completa
+     */
+    private JPanel criarSecaoConteudo(String tituloSecao, String tipoConteudo, String[] titulosMockados) {
+        JPanel secao = new JPanel();
+        secao.setLayout(new BoxLayout(secao, BoxLayout.Y_AXIS));
+        secao.setBackground(new Color(245, 245, 245));
+        
+        // Cabeçalho da seção com título e botão "Ver todos"
+        JPanel cabecalho = new JPanel(new BorderLayout());
+        cabecalho.setBackground(new Color(245, 245, 245));
+        cabecalho.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
+        
+        // Título da seção
+        JLabel titulo = new JLabel(tituloSecao);
+        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        titulo.setForeground(new Color(50, 50, 50));
+        cabecalho.add(titulo, BorderLayout.WEST);
+        
+        // Botão "Ver todos"
+        JButton botaoVerTodos = new JButton("Ver todos");
+        botaoVerTodos.setFont(new Font("Arial", Font.PLAIN, 14));
+        botaoVerTodos.setForeground(new Color(70, 130, 180));
+        botaoVerTodos.setBorderPainted(false);
+        botaoVerTodos.setContentAreaFilled(false);
+        botaoVerTodos.setFocusPainted(false);
+        botaoVerTodos.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        botaoVerTodos.addActionListener(e -> {
+            if (gerenciadorTelas != null) {
+                navegarParaLista(tipoConteudo);
+            }
+        });
+        cabecalho.add(botaoVerTodos, BorderLayout.EAST);
+        
+        secao.add(cabecalho);
+        
+        // Cards dos conteúdos (mostrar apenas alguns, não todos)
         JPanel painelCards = new JPanel();
         painelCards.setLayout(new BoxLayout(painelCards, BoxLayout.Y_AXIS));
         painelCards.setBackground(new Color(245, 245, 245));
         
-        // Criar 4 cards com título mockado e imagem placeholder
-        String[] titulosMockados = {
-            "Filme Exemplo 1",
-            "Série Exemplo 2",
-            "Livro Exemplo 3",
-            "Jogo Exemplo 4"
-        };
-        
-        for (int i = 0; i < 4; i++) {
+        // Mostrar apenas os primeiros 3-4 conteúdos
+        int quantidadeCards = Math.min(titulosMockados.length, 4);
+        for (int i = 0; i < quantidadeCards; i++) {
             JPanel card = criarCardComConteudo(titulosMockados[i]);
             painelCards.add(card);
-            if (i < 3) {
-                painelCards.add(Box.createVerticalStrut(20)); // Espaçamento entre cards
+            if (i < quantidadeCards - 1) {
+                painelCards.add(Box.createVerticalStrut(15));
             }
         }
         
-        conteudo.add(painelCards, BorderLayout.CENTER);
+        secao.add(painelCards);
         
-        return conteudo;
+        return secao;
+    }
+    
+    /**
+     * Navega para a tela de lista correspondente ao tipo de conteúdo.
+     */
+    private void navegarParaLista(String tipoConteudo) {
+        if (gerenciadorTelas == null) {
+            Logger.warn("Gerenciador de telas não configurado. Não é possível navegar para: {}", tipoConteudo);
+            return;
+        }
+        
+        switch (tipoConteudo) {
+            case "FILMES":
+                gerenciadorTelas.navegarParaFilmeLista();
+                break;
+            case "LIVROS":
+                gerenciadorTelas.navegarParaLivroLista();
+                break;
+            case "JOGOS":
+                gerenciadorTelas.navegarParaJogoLista();
+                break;
+            case "SERIES":
+                gerenciadorTelas.navegarParaSerieLista();
+                break;
+            default:
+                Logger.warn("Tipo de conteúdo desconhecido: {}", tipoConteudo);
+        }
     }
     
     /**
@@ -195,5 +282,15 @@ public class TelaInicial extends JPanel {
             botaoUsuario.setText("Usuário");
         }
     }
+    
+    /**
+     * Define o gerenciador de telas para permitir navegação.
+     * 
+     * @param gerenciadorTelas O gerenciador de telas
+     */
+    public void setGerenciadorTelas(GerenciadorTelas gerenciadorTelas) {
+        this.gerenciadorTelas = gerenciadorTelas;
+    }
 }
+
 
