@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Arigo extends Pessoa implements Avaliador {
 
-    private static final int PESO_PADRAO = 1;
+    private static final int PESO_AVALIACAO = 1;
     
     public Arigo(String nome, LocalDate dataNasc, String email){
         super(nome, dataNasc, email);
@@ -17,7 +17,7 @@ public class Arigo extends Pessoa implements Avaliador {
             throw new IllegalArgumentException("A nota deve ser entre 1 e 5");
         }
 
-        Avaliacao novaAvaliacao = new Avaliacao(nota, PESO_PADRAO, comentario, this.getId());
+        Avaliacao novaAvaliacao = new Avaliacao(nota, PESO_AVALIACAO, comentario, this.getId());
 
         conteudo.adicionarAvaliacao(novaAvaliacao);
 

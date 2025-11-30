@@ -21,10 +21,10 @@ public class JogoTest {
     @Test
     void calculaMediaPonderadaJogo() {
         Jogo jogo = new Jogo("JogoTeste", LocalDate.now(), "Ação", "DevCo");
-        arigo.avaliar(jogo, 6, "Ok");
-        critico.avaliar(jogo, 8, "Bom");
+        arigo.avaliar(jogo, 3, "Ok");
+        critico.avaliar(jogo, 4, "Bom");
 
-        double esperado = (6 * 1 + 8 * 2) / 3.0;
+        double esperado = (3 * 1 + 4 * 2) / 3.0;
         assertEquals(esperado, jogo.calcularMediaPonderada(), 0.0001);
     }
 
