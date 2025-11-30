@@ -22,11 +22,15 @@ A estrutura do projeto segue as convenções do Java, separando as responsabilid
 ```bash
 TCP-20252-final-grupo-05
     │
+    ├── config                   <-- Arquivos de configuração (ex: tinylog.properties)
+    ├── lib                      <-- Dependências externas (Tinylog, JUnit)
+    ├── scripts                  <-- Scripts de execução automatizada (Windows/Linux)
+    │
     └── src
         │
         ├───── main  <-- Pacote principal
         │       │
-        │       ├── ArigoFlixApp.java    <-- Classe principal (Main) que inicia o programa
+        │       ├── Main.java    <-- Classe principal que inicia o programa
         │       │
         │       ├── models               <-- (Classes que representam dados/entidades)
         │       │   ├── Pessoa.java      (abstrata)
@@ -51,29 +55,58 @@ TCP-20252-final-grupo-05
         │           └── TelaDetalhes.java
         │
         ├───── resources
-        │       └── data
-        │           └── conteudos.csv    <-- (Exemplo: para carregar dados do RF-2)
+        │       └── data                 <-- (Arquivos de persistência de dados)    
         │
-        └───── test
-                └── PessoaTest.java      <-- (Testes unitários)
+        └───── test                       <-- (Testes unitários)
 ```
 
 ## 🚀 Como Compilar e Executar
 
 ### Compilação
 
-Para compilar o projeto, execute o seguinte comando na raiz do projeto:
+Este projeto utiliza scripts automatizados localizados na pasta scripts/. Eles gerenciam automaticamente:
+
+1. A inclusão das bibliotecas (lib/) no Classpath.
+
+2. A cópia temporária dos arquivos de dados (.csv) para que o programa consiga lê-los.
+
+3. A compilação em uma pasta temporária (bin/) para manter a raiz do projeto limpa.
+
+4. A limpeza dos arquivos temporários após a execução.
+
+### No Windows
+Abra o terminal (CMD ou PowerShell) na raiz do projeto e execute:
+
+**Para rodar a Aplicação:**
 
 ```bash
-javac -d build -sourcepath src src/main/**/*.java
+.\scripts\run-windows.bat
 ```
 
-### Execução
-
-Após compilar, execute o projeto com:
+**Para rodar os Testes (JUnit):**
 
 ```bash
-java -cp build main.Main
+.\scripts\test-windows.bat
+```
+
+### No Linux / macOS
+Primeiro, dê permissão de execução aos scripts (necessário apenas na primeira vez):
+
+```bash
+chmod +x scripts/run-macos-linux.sh
+chmod +x scripts/test-macos-linux.sh
+```
+
+**Para rodar a Aplicação:**
+
+```bash
+./scripts/run-macos-linux.sh
+```
+
+**Para rodar os Testes (JUnit):**
+
+```bash
+./scripts/test-macos-linux.sh
 ```
 
 ## 🔄 Fluxo de Trabalho
