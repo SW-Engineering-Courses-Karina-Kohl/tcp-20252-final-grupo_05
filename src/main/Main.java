@@ -32,7 +32,7 @@ public class Main {
             
             TelaLogin telaLogin = new TelaLogin(autenticacao);
             TelaCadastro telaCadastro = new TelaCadastro(autenticacao);
-            TelaInicial telaInicial = new TelaInicial();
+            TelaInicial telaInicial = new TelaInicial(autenticacao);
             TelaDetalhes telaDetalhes = new TelaDetalhes();
             
             painelPrincipal.add(telaLogin, "LOGIN");
