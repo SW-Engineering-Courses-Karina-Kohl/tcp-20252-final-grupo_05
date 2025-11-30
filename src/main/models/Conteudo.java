@@ -29,6 +29,10 @@ public abstract class Conteudo {
     }
 
     public void adicionarAvaliacao(Avaliacao avaliacao) {
+        if (avaliacao == null) {
+            throw new IllegalArgumentException("Avaliação não pode ser nula");
+        }
+
         this.avaliacoes.add(avaliacao);
     }
 
@@ -37,7 +41,7 @@ public abstract class Conteudo {
     */
 
     public List<Avaliacao> getAvaliacoes() {
-        return avaliacoes;
+        return List.copyOf(this.avaliacoes);
     }
 
     public String getTitulo() {

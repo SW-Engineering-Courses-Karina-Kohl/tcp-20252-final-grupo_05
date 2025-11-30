@@ -5,10 +5,11 @@ import org.tinylog.Logger;
 
 public class Arigo extends Pessoa implements Avaliador {
 
-    private static final int PESO_PADRAO = 1;
+    private static final int PESO_AVALIACAO = 1;
     
     public Arigo(String nome, LocalDate dataNasc, String email){
         super(nome, dataNasc, email);
+        // herda um ID criado pela classe base Pessoa automaticamente
     }
 
     @Override
@@ -20,7 +21,7 @@ public class Arigo extends Pessoa implements Avaliador {
             throw new IllegalArgumentException("A nota deve ser entre 1 e 5");
         }
 
-        Avaliacao novaAvaliacao = new Avaliacao(nota, PESO_PADRAO, comentario, this.getId());
+        Avaliacao novaAvaliacao = new Avaliacao(nota, PESO_AVALIACAO, comentario, this.getId());
 
         Logger.info("Usuário {} avaliou conteúdo {} com nota {}.", this.getId(), conteudo.getTitulo(), nota);
 
