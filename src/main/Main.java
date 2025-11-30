@@ -3,15 +3,15 @@ package main;
 import main.ui.*;
 import javax.swing.*;
 import java.awt.*;
+import org.tinylog.Logger;
 
 public class Main {
     
     public static void main(String[] args) {
+        Logger.info("Aplicação iniciada. Iniciando configuração da interface gráfica.");
+
         // 1 - Ler arquivos
-
-
         // 2 - Inicializar estado da aplicação em memória
-
 
         // 3 - Iniciar interface gráfica
         SwingUtilities.invokeLater(() -> {
@@ -34,10 +34,14 @@ public class Main {
             painelPrincipal.add(telaDetalhes, "DETALHES");
             
             frame.add(painelPrincipal);
-            
-            cardLayout.show(painelPrincipal, "LOGIN");
-            
-            frame.setVisible(true);
+
+            try {
+                cardLayout.show(painelPrincipal, "LOGIN");
+                Logger.info("Interface gráfica carregada. Exibindo tela de login.");
+                frame.setVisible(true);
+            } catch (Exception e) {
+                Logger.error(e, "Erro crítico ao exibir a interface gráfica inicial.");
+            }
         });
     }
 }
