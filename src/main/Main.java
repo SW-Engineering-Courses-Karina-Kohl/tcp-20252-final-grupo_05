@@ -18,7 +18,7 @@ public class Main {
         Context context = Context.initialize(carregador);
 
         // Criar serviço de autenticação
-        Autenticacao autenticacao = new ServicoAutenticacao(context);
+        Autenticacao autenticacao = new ServicoAutenticacao(context, false);
 
         // 3 - Iniciar interface gráfica
         SwingUtilities.invokeLater(() -> {
@@ -30,21 +30,52 @@ public class Main {
             CardLayout cardLayout = new CardLayout();
             JPanel painelPrincipal = new JPanel(cardLayout);
             
-            TelaLogin telaLogin = new TelaLogin(autenticacao);
-            TelaCadastro telaCadastro = new TelaCadastro(autenticacao);
-            TelaInicial telaInicial = new TelaInicial();
-            TelaDetalhes telaDetalhes = new TelaDetalhes();
+                TelaLogin telaLogin = new TelaLogin(autenticacao);
+                TelaCadastro telaCadastro = new TelaCadastro(autenticacao);
+                TelaInicial telaInicial = new TelaInicial(autenticacao, context);
+                TelaDetalhes telaDetalhes = new TelaDetalhes(context, autenticacao);
+                TelaFilmeLista telaFilmeLista = new TelaFilmeLista(context);
+                TelaLivroLista telaLivroLista = new TelaLivroLista(context);
+                TelaJogoLista telaJogoLista = new TelaJogoLista(context);
+                TelaSerieLista telaSerieLista = new TelaSerieLista(context);
             
             painelPrincipal.add(telaLogin, "LOGIN");
             painelPrincipal.add(telaCadastro, "CADASTRO");
             painelPrincipal.add(telaInicial, "HOME");
             painelPrincipal.add(telaDetalhes, "DETALHES");
+            painelPrincipal.add(telaFilmeLista, "FILME_LISTA");
+            painelPrincipal.add(telaLivroLista, "LIVRO_LISTA");
+            painelPrincipal.add(telaJogoLista, "JOGO_LISTA");
+            painelPrincipal.add(telaSerieLista, "SERIE_LISTA");
+            
+            // Criar gerenciador de telas
+            GerenciadorTelas gerenciadorTelas = new GerenciadorTelas(
+                painelPrincipal, cardLayout,
+                telaLogin, telaCadastro, telaInicial, telaDetalhes,
+                telaFilmeLista, telaLivroLista, telaJogoLista, telaSerieLista
+            );
+            
+            // Passar gerenciador para as telas que precisam dele
+            telaLogin.setGerenciadorTelas(gerenciadorTelas);
+            telaCadastro.setGerenciadorTelas(gerenciadorTelas);
+            telaInicial.setGerenciadorTelas(gerenciadorTelas);
+            telaFilmeLista.setGerenciadorTelas(gerenciadorTelas);
+            telaLivroLista.setGerenciadorTelas(gerenciadorTelas);
+            telaJogoLista.setGerenciadorTelas(gerenciadorTelas);
+            telaSerieLista.setGerenciadorTelas(gerenciadorTelas);
+            telaDetalhes.setGerenciadorTelas(gerenciadorTelas);
             
             frame.add(painelPrincipal);
 
             try {
-                cardLayout.show(painelPrincipal, "LOGIN");
-                Logger.info("Interface gráfica carregada. Exibindo tela de login.");
+                if (autenticacao.estaAutenticado()) {
+                    // Atualizar a tela inicial com os dados do usuário antes de exibir
+                    gerenciadorTelas.navegarParaHome();
+                    Logger.info("Interface gráfica carregada. Exibindo tela de home.");
+                } else {
+                    gerenciadorTelas.navegarParaLogin();
+                    Logger.info("Interface gráfica carregada. Exibindo tela de login.");
+                }
                 frame.setVisible(true);
             } catch (Exception e) {
                 Logger.error(e, "Erro crítico ao exibir a interface gráfica inicial.");

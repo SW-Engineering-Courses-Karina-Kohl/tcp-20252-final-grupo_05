@@ -1,26 +1,28 @@
 package main.service;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import main.models.ContextEntity;
 
 /**
- * Generic repository class for in-memory data storage and retrieval.
+ * Base repository class for in-memory data storage and retrieval.
  * Provides basic CRUD operations similar to .NET DbContext pattern.
  * 
  * @param <T> The entity type that must have a getId() method returning UUID
  */
-public class Repository<T> implements Serializable {
+public class BaseRepository<T> implements Serializable {
     private static final long serialVersionUID = 1L;
-    private List<T> entities;
+    private final List<T> entities;
 
     /**
      * Constructor that initializes the repository with a list of entities.
      * 
      * @param initialEntities The initial list of entities to populate the repository
      */
-    public Repository(List<T> initialEntities) {
+    public BaseRepository(List<T> initialEntities) {
         this.entities = new ArrayList<>(initialEntities);
     }
 
@@ -56,9 +58,8 @@ public class Repository<T> implements Serializable {
                 if (id.equals(entityId)) {
                     return entity;
                 }
-            } catch (Exception e) {
+            } catch (NoSuchMethodException | IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
                 // If getId() doesn't exist or fails, skip this entity
-                continue;
             }
         }
         return null;
@@ -94,6 +95,49 @@ public class Repository<T> implements Serializable {
      */
     public List<T> findAll() {
         return getAll();
+    }
+
+    /**
+     * Retorna a entidade mais recente baseada na data de criação.
+     * A entidade deve ser uma instância de ContextEntity ou ter um método getDataCriacao().
+     * 
+     * @return A entidade com a data de criação mais recente, ou null se não houver entidades ou nenhuma tiver data de criação
+     */
+    public T getMaisRecente() {
+        if (entities.isEmpty()) {
+            return null;
+        }
+
+        T maisRecente = null;
+        LocalDate dataMaisRecente = null;
+
+        for (T entity : entities) {
+            LocalDate dataCriacao = null;
+
+            // Verifica se é instância de ContextEntity
+            if (entity instanceof ContextEntity) {
+                dataCriacao = ((ContextEntity) entity).getDataCriacao();
+            } else {
+                // Tenta usar reflection para chamar getDataCriacao()
+                try {
+                    java.lang.reflect.Method getDataCriacaoMethod = entity.getClass().getMethod("getDataCriacao");
+                    dataCriacao = (LocalDate) getDataCriacaoMethod.invoke(entity);
+                } catch (Exception e) {
+                    // Se não tiver o método, pula esta entidade
+                    continue;
+                }
+            }
+
+            // Se encontrou uma data de criação e é mais recente que a atual
+            if (dataCriacao != null) {
+                if (dataMaisRecente == null || dataCriacao.isAfter(dataMaisRecente)) {
+                    dataMaisRecente = dataCriacao;
+                    maisRecente = entity;
+                }
+            }
+        }
+
+        return maisRecente;
     }
 }
 

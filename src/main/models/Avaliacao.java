@@ -1,12 +1,10 @@
 package main.models;
 
-import java.io.Serializable;
 import java.util.UUID;
 
-public class Avaliacao implements Serializable {
+public class Avaliacao extends ContextEntity {
     private static final long serialVersionUID = 1L;
 
-    private UUID id;
     private int nota; 
     private int peso;
     private String comentario;
@@ -17,7 +15,7 @@ public class Avaliacao implements Serializable {
      * Construtor com ID opcional. Se o ID for null, gera um UUID aleatório.
      */
     public Avaliacao(UUID id, int nota, int peso, String comentario, UUID idUsuario) {
-        this.id = (id != null) ? id : UUID.randomUUID();
+        super(id);
         this.nota = nota;
         this.peso = peso;
         this.comentario = comentario;
@@ -39,10 +37,6 @@ public class Avaliacao implements Serializable {
     /* 
     * Getters
     */
-
-    public UUID getId() {
-        return id;
-    }
 
     public int getLikes() {
         return this.likes;
@@ -66,11 +60,7 @@ public class Avaliacao implements Serializable {
 
     /* 
     * Setters
-    */ 
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    */
 
     public void setNota(int nota) {
         this.nota = nota;

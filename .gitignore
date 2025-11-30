@@ -29,3 +29,4 @@ context.dat
 
 *.csv
 !src/resources/data/*.csv
+.DS_Store

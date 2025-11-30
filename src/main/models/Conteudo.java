@@ -1,16 +1,14 @@
 package main.models;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.tinylog.Logger;
 
-public abstract class Conteudo implements Serializable {
+public abstract class Conteudo extends ContextEntity {
     private static final long serialVersionUID = 1L;
 
-    private UUID id;
     private String titulo;
     private LocalDate dataLanc;
     private List<Avaliacao> avaliacoes;
@@ -19,6 +17,7 @@ public abstract class Conteudo implements Serializable {
      * Construtor com ID opcional. Se o ID for null, gera um UUID aleatório.
      */
     public Conteudo(UUID id, String titulo, LocalDate dataLanc) {
+        super(id);
 
         if (titulo == null || titulo.isBlank()) {
             Logger.error("Falha ao criar Conteudo: título inválido (nulo ou em branco).");
@@ -30,7 +29,6 @@ public abstract class Conteudo implements Serializable {
             throw new IllegalArgumentException("Data de lançamento não pode ser nula");
         }
 
-        this.id = (id != null) ? id : UUID.randomUUID();
         this.titulo = titulo;
         this.dataLanc = dataLanc;
         this.avaliacoes = new ArrayList<>();
@@ -55,10 +53,6 @@ public abstract class Conteudo implements Serializable {
     * Getters
     */
 
-    public UUID getId() {
-        return id;
-    }
-
     public List<Avaliacao> getAvaliacoes() {
         return List.copyOf(this.avaliacoes);
     }
@@ -73,11 +67,7 @@ public abstract class Conteudo implements Serializable {
 
     /* 
     * Setters
-    */ 
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    */
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
@@ -85,6 +75,24 @@ public abstract class Conteudo implements Serializable {
 
     public void setDataLanc(LocalDate dataLanc) {
         this.dataLanc = dataLanc;
+    }
+
+    /**
+     * Calcula a média simples das notas das avaliações.
+     * 
+     * @return A média das notas (0.0 se não houver avaliações)
+     */
+    public double calcularMedia() {
+        if (avaliacoes.isEmpty()) {
+            return 0.0;
+        }
+
+        double somaNotas = 0.0;
+        for (Avaliacao aval : avaliacoes) {
+            somaNotas += aval.getNota();
+        }
+
+        return somaNotas / avaliacoes.size();
     }
 
     public double calcularMediaPonderada() {
