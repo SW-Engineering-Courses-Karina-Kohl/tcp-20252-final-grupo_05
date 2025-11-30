@@ -7,8 +7,8 @@ pushd %~dp0..
 :: cria a pasta bin se não existir
 if not exist "bin" mkdir bin
 
-:: classpath apontando para 'bin'
-set CLASSPATH=lib\tinylog-api-2.7.0.jar;lib\tinylog-impl-2.7.0.jar;src\main;bin
+:: classpath para compilação
+set CLASSPATH=lib\tinylog-api-2.7.0.jar;lib\tinylog-impl-2.7.0.jar;src\main;src\resources;.
 
 set LOG_CONFIG=config\tinylog.properties
 
@@ -29,7 +29,9 @@ echo [2/3] Executando Aplicacao...
 :: precisa copiar os CSVs aqui tambem para a aplicação principal usa-los
 if exist "src\resources\data\*.csv" copy /Y "src\resources\data\*.csv" . >nul
 
-java -Dtinylog.configuration="%LOG_CONFIG%" -cp "%CLASSPATH%" main.Main
+:: CLASSPATH para execução: precisa incluir bin\ onde estão os .class compilados
+set RUNTIME_CLASSPATH=lib\tinylog-api-2.7.0.jar;lib\tinylog-impl-2.7.0.jar;bin;src\resources;.
+java -Dtinylog.configuration="%LOG_CONFIG%" -cp "%RUNTIME_CLASSPATH%" main.Main
 
 echo.
 echo [3/3] Limpando arquivos temporarios...
