@@ -1,6 +1,7 @@
 package main.service.autenticacao;
 
 import main.models.Arigo;
+import main.models.Critico;
 import main.models.Pessoa;
 import main.service.Context;
 import org.tinylog.Logger;
@@ -51,11 +52,12 @@ public class ServicoAutenticacao implements Autenticacao {
 
     @Override
     public void registrar(String email, String senha) throws EmailJaCadastradoException {
-        registrar("Usuário", email, senha);
+        registrar("Usuário", email, senha, "Arigó");
     }
 
     /**
      * Registra um novo usuário no sistema com nome.
+     * Por padrão, cria um Arigó.
      * 
      * @param nome O nome do usuário
      * @param email O email do usuário
@@ -63,6 +65,19 @@ public class ServicoAutenticacao implements Autenticacao {
      * @throws EmailJaCadastradoException Se o email já estiver cadastrado
      */
     public void registrar(String nome, String email, String senha) throws EmailJaCadastradoException {
+        registrar(nome, email, senha, "Arigó");
+    }
+
+    /**
+     * Registra um novo usuário no sistema com nome e tipo.
+     * 
+     * @param nome O nome do usuário
+     * @param email O email do usuário
+     * @param senha A senha do usuário
+     * @param tipo O tipo de usuário ("Arigó" ou "Crítico")
+     * @throws EmailJaCadastradoException Se o email já estiver cadastrado
+     */
+    public void registrar(String nome, String email, String senha, String tipo) throws EmailJaCadastradoException {
         if (nome == null || nome.isBlank()) {
             throw new IllegalArgumentException("Nome não pode ser nulo ou vazio");
         }
@@ -72,6 +87,9 @@ public class ServicoAutenticacao implements Autenticacao {
         if (senha == null || senha.isBlank()) {
             throw new IllegalArgumentException("Senha não pode ser nula ou vazia");
         }
+        if (tipo == null || tipo.isBlank()) {
+            throw new IllegalArgumentException("Tipo não pode ser nulo ou vazio");
+        }
 
         // Verifica se o email já está cadastrado
         Pessoa pessoaExistente = buscarPessoaPorEmail(email);
@@ -79,16 +97,25 @@ public class ServicoAutenticacao implements Autenticacao {
             throw new EmailJaCadastradoException(email);
         }
 
-        // Cria novo Arigo com os dados fornecidos
         // Para registro, usamos data de nascimento padrão (18 anos atrás)
         LocalDate dataNasc = LocalDate.now().minusYears(18);
-        Arigo novoArigo = new Arigo(nome, dataNasc, email, senha);
-        this.pessoaAutenticada = novoArigo;
+        
+        // Cria Arigo ou Critico conforme o tipo selecionado
+        Pessoa novaPessoa;
+        if (tipo.equalsIgnoreCase("Crítico") || tipo.equalsIgnoreCase("Critico")) {
+            novaPessoa = new Critico(nome, dataNasc, email, senha);
+            Logger.info("Novo crítico registrado: " + nome + " (" + email + ")");
+        } else {
+            // Default: Arigó
+            novaPessoa = new Arigo(nome, dataNasc, email, senha);
+            Logger.info("Novo arigó registrado: " + nome + " (" + email + ")");
+        }
+        
+        this.pessoaAutenticada = novaPessoa;
         
         try {
-            context.pessoas.add(novoArigo);
+            context.pessoas.add(novaPessoa);
             context.save();
-            Logger.info("Novo usuário registrado: " + nome + " (" + email + ")");
         } catch (Exception e) {
             Logger.error(e, "Erro ao salvar contexto após registro de novo usuário: " + e.getMessage());
         }

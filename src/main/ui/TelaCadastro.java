@@ -13,6 +13,7 @@ public class TelaCadastro extends JPanel {
     private JTextField campoNome;
     private JTextField campoEmail;
     private JPasswordField campoSenha;
+    private JComboBox<String> comboTipo;
     private JButton botaoCadastrar;
     private JButton botaoLogin;
     private JLabel labelErro;
@@ -141,8 +142,29 @@ public class TelaCadastro extends JPanel {
         gbc.gridy = 6;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(0, 20, 10, 20);
+        gbc.insets = new Insets(0, 20, 15, 20);
         painel.add(campoSenha, gbc);
+
+        JLabel labelTipo = new JLabel("Tipo:");
+        labelTipo.setFont(new Font("Arial", Font.PLAIN, 14));
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.insets = new Insets(10, 20, 5, 20);
+        painel.add(labelTipo, gbc);
+
+        String[] tipos = {"Arigó", "Crítico"};
+        comboTipo = new JComboBox<>(tipos);
+        comboTipo.setSelectedIndex(0); // Default: Arigó
+        comboTipo.setFont(new Font("Arial", Font.PLAIN, 14));
+        gbc.gridx = 0;
+        gbc.gridy = 8;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 20, 10, 20);
+        painel.add(comboTipo, gbc);
 
         // Label para mensagens de erro
         labelErro = new JLabel(" ");
@@ -151,7 +173,7 @@ public class TelaCadastro extends JPanel {
         labelErro.setHorizontalAlignment(SwingConstants.CENTER);
         labelErro.setPreferredSize(new Dimension(0, 20)); // Altura mínima
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 9;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 20, 5, 20);
@@ -164,7 +186,7 @@ public class TelaCadastro extends JPanel {
         labelSucesso.setHorizontalAlignment(SwingConstants.CENTER);
         labelSucesso.setPreferredSize(new Dimension(0, 20)); // Altura mínima
         gbc.gridx = 0;
-        gbc.gridy = 8;
+        gbc.gridy = 10;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 20, 10, 20);
@@ -176,7 +198,7 @@ public class TelaCadastro extends JPanel {
             realizarCadastro();
         });
         gbc.gridx = 0;
-        gbc.gridy = 9;
+        gbc.gridy = 11;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 20, 10, 20);
@@ -198,7 +220,7 @@ public class TelaCadastro extends JPanel {
             }
         });
         gbc.gridx = 0;
-        gbc.gridy = 10;
+        gbc.gridy = 12;
         gbc.gridwidth = 2;
         gbc.insets = new Insets(10, 20, 20, 20);
         painel.add(botaoLogin, gbc);
@@ -230,9 +252,10 @@ public class TelaCadastro extends JPanel {
         }
 
         try {
-            // Verifica se é ServicoAutenticacao para usar o método com nome
+            // Verifica se é ServicoAutenticacao para usar o método com nome e tipo
             if (autenticacao instanceof ServicoAutenticacao) {
-                ((ServicoAutenticacao) autenticacao).registrar(nome, email, senha);
+                String tipoSelecionado = (String) comboTipo.getSelectedItem();
+                ((ServicoAutenticacao) autenticacao).registrar(nome, email, senha, tipoSelecionado);
             } else {
                 autenticacao.registrar(email, senha);
             }
