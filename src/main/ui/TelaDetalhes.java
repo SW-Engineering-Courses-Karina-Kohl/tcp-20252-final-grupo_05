@@ -67,6 +67,8 @@ public class TelaDetalhes extends JPanel {
         }
         
         // Botão voltar
+        JPanel painelVoltar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        painelVoltar.setBackground(Color.WHITE);
         JButton botaoVoltar = new JButton("← Voltar");
         botaoVoltar.setFont(new Font("Arial", Font.PLAIN, 14));
         botaoVoltar.setForeground(new Color(70, 130, 180));
@@ -79,7 +81,8 @@ public class TelaDetalhes extends JPanel {
                 gerenciadorTelas.navegarParaHome();
             }
         });
-        painelPrincipal.add(botaoVoltar);
+        painelVoltar.add(botaoVoltar);
+        painelPrincipal.add(painelVoltar);
         painelPrincipal.add(Box.createVerticalStrut(20));
         
         // Informações do conteúdo
@@ -305,17 +308,22 @@ public class TelaDetalhes extends JPanel {
         painel.add(painelNota);
         painel.add(Box.createVerticalStrut(15));
         
-        // Botão avaliar
-        botaoAvaliar = new JButton("Avaliar");
+        // Botão enviar
+        JPanel painelBotao = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        painelBotao.setBackground(Color.WHITE);
+        botaoAvaliar = new JButton("Enviar");
         botaoAvaliar.setFont(new Font("Arial", Font.BOLD, 14));
         botaoAvaliar.setBackground(new Color(70, 130, 180));
         botaoAvaliar.setForeground(Color.WHITE);
+        botaoAvaliar.setOpaque(true);
         botaoAvaliar.setBorderPainted(false);
+        botaoAvaliar.setContentAreaFilled(true);
         botaoAvaliar.setFocusPainted(false);
         botaoAvaliar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botaoAvaliar.setPreferredSize(new Dimension(120, 35));
         botaoAvaliar.addActionListener(e -> criarAvaliacao());
-        painel.add(botaoAvaliar);
+        painelBotao.add(botaoAvaliar);
+        painel.add(painelBotao);
         
         return painel;
     }
@@ -347,8 +355,13 @@ public class TelaDetalhes extends JPanel {
             
             int nota = (Integer) campoNota.getValue();
             
+            // Criar avaliação usando o método avaliar() do Avaliador
+            // Isso já chama conteudo.adicionarAvaliacao() e pessoa.registrarAvaliacao()
             Avaliador avaliador = (Avaliador) pessoa;
-            avaliador.avaliar(conteudoAtual, nota, comentario);
+            Avaliacao novaAvaliacao = avaliador.avaliar(conteudoAtual, nota, comentario);
+            
+            // Adicionar avaliação ao repository de avaliações
+            context.avaliacoes.add(novaAvaliacao);
             
             // Limpar campos
             campoComentario.setText("");
@@ -356,6 +369,8 @@ public class TelaDetalhes extends JPanel {
             
             // Atualizar tela
             render();
+
+            context.save();
             
             JOptionPane.showMessageDialog(this, "Avaliação criada com sucesso!", 
                 "Sucesso", JOptionPane.INFORMATION_MESSAGE);

@@ -46,15 +46,25 @@ public class TelaInicial extends JPanel {
         navbar.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(220, 220, 220)));
         
         // Logo "Arigoflix" à esquerda
+        JPanel painelLogo = new JPanel();
+        painelLogo.setLayout(new BoxLayout(painelLogo, BoxLayout.Y_AXIS));
+        painelLogo.setBackground(Color.WHITE);
+        painelLogo.add(Box.createVerticalGlue());
         JLabel logo = new JLabel("ArigóFlix");
         logo.setFont(new Font("Arial", Font.BOLD, 28));
         logo.setForeground(new Color(70, 130, 180));
         logo.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-        navbar.add(logo, BorderLayout.WEST);
+        painelLogo.add(logo);
+        painelLogo.add(Box.createVerticalGlue());
+        navbar.add(painelLogo, BorderLayout.WEST);
         
         // Campo de pesquisa ao centro
-        JPanel painelPesquisa = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel painelPesquisa = new JPanel();
+        painelPesquisa.setLayout(new BoxLayout(painelPesquisa, BoxLayout.Y_AXIS));
         painelPesquisa.setBackground(Color.WHITE);
+        painelPesquisa.add(Box.createVerticalGlue());
+        JPanel painelPesquisaInterno = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        painelPesquisaInterno.setBackground(Color.WHITE);
         campoPesquisa = new JTextField(25);
         campoPesquisa.setFont(new Font("Arial", Font.PLAIN, 14));
         campoPesquisa.setBorder(BorderFactory.createCompoundBorder(
@@ -94,13 +104,19 @@ public class TelaInicial extends JPanel {
                 timer.start();
             }
         });
-        painelPesquisa.add(campoPesquisa);
+        painelPesquisaInterno.add(campoPesquisa);
+        painelPesquisa.add(painelPesquisaInterno);
+        painelPesquisa.add(Box.createVerticalGlue());
         navbar.add(painelPesquisa, BorderLayout.CENTER);
         
         // Nome do usuário à direita (clicável)
-        JPanel painelUsuario = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel painelUsuario = new JPanel();
+        painelUsuario.setLayout(new BoxLayout(painelUsuario, BoxLayout.Y_AXIS));
         painelUsuario.setBackground(Color.WHITE);
         painelUsuario.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+        painelUsuario.add(Box.createVerticalGlue());
+        JPanel painelUsuarioInterno = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        painelUsuarioInterno.setBackground(Color.WHITE);
         
         // Inicializa com valor padrão, será atualizado quando o usuário fizer login
         botaoUsuario = new JButton("Usuário");
@@ -115,7 +131,9 @@ public class TelaInicial extends JPanel {
             // TODO: Implementar navegação para página do usuário
         });
         
-        painelUsuario.add(botaoUsuario);
+        painelUsuarioInterno.add(botaoUsuario);
+        painelUsuario.add(painelUsuarioInterno);
+        painelUsuario.add(Box.createVerticalGlue());
         navbar.add(painelUsuario, BorderLayout.EAST);
         
         return navbar;

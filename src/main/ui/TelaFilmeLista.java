@@ -1,12 +1,10 @@
 package main.ui;
 
-import main.models.Filme;
-import main.service.Context;
-import org.tinylog.Logger;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import javax.swing.*;
+import main.models.Filme;
+import main.service.Context;
 
 public class TelaFilmeLista extends JPanel {
     
@@ -16,14 +14,11 @@ public class TelaFilmeLista extends JPanel {
     public TelaFilmeLista(Context context) {
         this.context = context;
         setLayout(new BorderLayout());
-        setBackground(new Color(245, 245, 245));
+        setBackground(Color.WHITE);
         
-        // Título
-        JLabel titulo = new JLabel("Todos os Filmes", SwingConstants.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 28));
-        titulo.setForeground(new Color(50, 50, 50));
-        titulo.setBorder(BorderFactory.createEmptyBorder(30, 0, 20, 0));
-        add(titulo, BorderLayout.NORTH);
+        // Navbar no topo
+        JPanel navbar = criarNavbar();
+        add(navbar, BorderLayout.NORTH);
         
         // Conteúdo com scroll
         JPanel conteudo = criarConteudo();
@@ -31,30 +26,53 @@ public class TelaFilmeLista extends JPanel {
         scrollPane.setBorder(null);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollPane, BorderLayout.CENTER);
+    }
+    
+    /**
+     * Cria a navbar com botão voltar à esquerda e título ao centro.
+     */
+    private JPanel criarNavbar() {
+        JPanel navbar = new JPanel(new BorderLayout());
+        navbar.setBackground(Color.WHITE);
+        navbar.setPreferredSize(new Dimension(0, 70));
+        navbar.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(220, 220, 220)));
         
-        // Botão voltar
-        JButton botaoVoltar = new JButton("Voltar para Home");
+        // Botão voltar à esquerda
+        JButton botaoVoltar = new JButton("← Voltar");
         botaoVoltar.setFont(new Font("Arial", Font.PLAIN, 14));
+        botaoVoltar.setForeground(new Color(70, 130, 180));
+        botaoVoltar.setBorderPainted(false);
+        botaoVoltar.setContentAreaFilled(false);
+        botaoVoltar.setFocusPainted(false);
+        botaoVoltar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        botaoVoltar.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
         botaoVoltar.addActionListener(e -> {
             if (gerenciadorTelas != null) {
                 gerenciadorTelas.navegarParaHome();
-            } else {
-                Logger.warn("Gerenciador de telas não configurado");
             }
         });
+        navbar.add(botaoVoltar, BorderLayout.WEST);
         
-        JPanel painelBotao = new JPanel();
-        painelBotao.setBackground(new Color(245, 245, 245));
-        painelBotao.add(botaoVoltar);
-        painelBotao.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-        add(painelBotao, BorderLayout.SOUTH);
+        // Título ao centro
+        JLabel titulo = new JLabel("Todos os Filmes", SwingConstants.CENTER);
+        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        titulo.setForeground(new Color(50, 50, 50));
+        navbar.add(titulo, BorderLayout.CENTER);
+        
+        // Espaço vazio à direita para manter o título centralizado
+        JPanel painelDireita = new JPanel();
+        painelDireita.setBackground(Color.WHITE);
+        painelDireita.setPreferredSize(new Dimension(100, 0));
+        navbar.add(painelDireita, BorderLayout.EAST);
+        
+        return navbar;
     }
     
     private JPanel criarConteudo() {
         JPanel conteudo = new JPanel();
         conteudo.setLayout(new BoxLayout(conteudo, BoxLayout.Y_AXIS));
         conteudo.setBackground(new Color(245, 245, 245));
-        conteudo.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+        conteudo.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         
         // Buscar filmes do Context
         List<Filme> filmes = context.filmes.findAll();

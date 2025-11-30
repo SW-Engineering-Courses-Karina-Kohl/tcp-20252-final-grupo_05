@@ -63,6 +63,7 @@ public class Main {
             telaLivroLista.setGerenciadorTelas(gerenciadorTelas);
             telaJogoLista.setGerenciadorTelas(gerenciadorTelas);
             telaSerieLista.setGerenciadorTelas(gerenciadorTelas);
+            telaDetalhes.setGerenciadorTelas(gerenciadorTelas);
             
             frame.add(painelPrincipal);
 
