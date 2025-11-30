@@ -30,14 +30,14 @@ public class Main {
             CardLayout cardLayout = new CardLayout();
             JPanel painelPrincipal = new JPanel(cardLayout);
             
-            TelaLogin telaLogin = new TelaLogin(autenticacao);
-            TelaCadastro telaCadastro = new TelaCadastro(autenticacao);
-            TelaInicial telaInicial = new TelaInicial(autenticacao, context);
-            TelaDetalhes telaDetalhes = new TelaDetalhes();
-            TelaFilmeLista telaFilmeLista = new TelaFilmeLista(context);
-            TelaLivroLista telaLivroLista = new TelaLivroLista(context);
-            TelaJogoLista telaJogoLista = new TelaJogoLista(context);
-            TelaSerieLista telaSerieLista = new TelaSerieLista(context);
+                TelaLogin telaLogin = new TelaLogin(autenticacao);
+                TelaCadastro telaCadastro = new TelaCadastro(autenticacao);
+                TelaInicial telaInicial = new TelaInicial(autenticacao, context);
+                TelaDetalhes telaDetalhes = new TelaDetalhes(context, autenticacao);
+                TelaFilmeLista telaFilmeLista = new TelaFilmeLista(context);
+                TelaLivroLista telaLivroLista = new TelaLivroLista(context);
+                TelaJogoLista telaJogoLista = new TelaJogoLista(context);
+                TelaSerieLista telaSerieLista = new TelaSerieLista(context);
             
             painelPrincipal.add(telaLogin, "LOGIN");
             painelPrincipal.add(telaCadastro, "CADASTRO");

@@ -101,6 +101,16 @@ public class GerenciadorTelas {
     }
     
     /**
+     * Navega para a tela de detalhes e exibe o conteúdo especificado.
+     * 
+     * @param conteudo O conteúdo a ser exibido
+     */
+    public void navegarParaDetalhes(main.models.Conteudo conteudo) {
+        telaDetalhes.exibirConteudo(conteudo);
+        navegarPara("DETALHES");
+    }
+    
+    /**
      * Navega para a tela de login.
      */
     public void navegarParaLogin() {

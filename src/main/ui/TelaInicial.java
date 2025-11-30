@@ -275,6 +275,17 @@ public class TelaInicial extends JPanel {
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150)); // Largura total, altura fixa
+        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        // Adicionar listener para tornar o card clicável
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (gerenciadorTelas != null) {
+                    gerenciadorTelas.navegarParaDetalhes(conteudo);
+                }
+            }
+        });
         
         // Placeholder de imagem à esquerda
         JPanel placeholderImagem = new JPanel();
