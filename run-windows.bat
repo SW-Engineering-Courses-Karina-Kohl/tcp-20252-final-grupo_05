@@ -6,7 +6,7 @@ setlocal
 set CLASSPATH=lib\tinylog-api-2.7.0.jar;lib\tinylog-impl-2.7.0.jar;src\main;.
 
 echo Compilando classes principais...
-javac -cp "%CLASSPATH%" src\main\main\Main.java
+javac -cp "%CLASSPATH%" -d . src\main\*.java src\main\ui\*.java src\main\models\*.java src\main\service\*.java
 
 if errorlevel 1 (
 	echo Erro na compilacao. Verifique as mensagens acima.
