@@ -1,6 +1,9 @@
 package main;
 
+import main.service.autenticacao.Autenticacao;
+import main.service.autenticacao.ServicoAutenticacao;
 import main.ui.*;
+import main.service.*;
 import javax.swing.*;
 import java.awt.*;
 import org.tinylog.Logger;
@@ -10,8 +13,12 @@ public class Main {
     public static void main(String[] args) {
         Logger.info("Aplicação iniciada. Iniciando configuração da interface gráfica.");
 
-        // 1 - Ler arquivos
-        // 2 - Inicializar estado da aplicação em memória
+        // Inicializar contexto (carrega do disco se existir, senão usa CarregadorDeDados)
+        CarregadorDeDados carregador = new CarregadorDeDados();
+        Context context = Context.initialize(carregador);
+
+        // Criar serviço de autenticação
+        Autenticacao autenticacao = new ServicoAutenticacao(context);
 
         // 3 - Iniciar interface gráfica
         SwingUtilities.invokeLater(() -> {
@@ -23,8 +30,8 @@ public class Main {
             CardLayout cardLayout = new CardLayout();
             JPanel painelPrincipal = new JPanel(cardLayout);
             
-            TelaLogin telaLogin = new TelaLogin();
-            TelaCadastro telaCadastro = new TelaCadastro();
+            TelaLogin telaLogin = new TelaLogin(autenticacao);
+            TelaCadastro telaCadastro = new TelaCadastro(autenticacao);
             TelaInicial telaInicial = new TelaInicial();
             TelaDetalhes telaDetalhes = new TelaDetalhes();
             

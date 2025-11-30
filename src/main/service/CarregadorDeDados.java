@@ -83,7 +83,7 @@ public class CarregadorDeDados {
         return catalogoDeConteudos;
     }
 
-    private List<Filme> carregarFilmes() {
+    public List<Filme> carregarFilmes() {
         List<Filme> filmes = new ArrayList<>();
 
         Logger.info("Iniciando carregamento de filmes a partir de 'filmes.csv'.");
@@ -110,7 +110,7 @@ public class CarregadorDeDados {
         return filmes;
     }
 
-    private List<Livro> carregarLivros() {
+    public List<Livro> carregarLivros() {
         List<Livro> livros = new ArrayList<>();
         Logger.info("Iniciando carregamento de livros a partir de 'livros.csv'.");
         try (BufferedReader leitor = lerArquivo("data/livros.csv")) {
@@ -135,7 +135,7 @@ public class CarregadorDeDados {
         return livros;
     }
 
-    private List<Jogo> carregarJogos() {
+    public List<Jogo> carregarJogos() {
         List<Jogo> jogos = new ArrayList<>();
 
         Logger.info("Iniciando carregamento de jogos a partir de 'jogos.csv'.");
@@ -166,7 +166,7 @@ public class CarregadorDeDados {
     /**
      * Carrega séries e episódios criando temporadas.
      */
-    private List<Serie> carregarSeriesCompletas() {
+    public List<Serie> carregarSeriesCompletas() {
         Map<Integer, Serie> mapaSeries = new HashMap<>();
 
         Logger.info("Iniciando carregamento de séries a partir de 'series.csv' e 'episodios.csv'.");

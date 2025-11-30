@@ -24,3 +24,8 @@ hs_err_pid*
 replay_pid*
 
 local/
+
+context.dat
+
+*.csv
+!src/resources/data/*.csv

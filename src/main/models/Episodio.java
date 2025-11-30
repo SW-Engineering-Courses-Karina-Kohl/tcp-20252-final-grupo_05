@@ -1,6 +1,9 @@
 package main.models;
 
-public class Episodio {
+import java.io.Serializable;
+
+public class Episodio implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final String titulo;
     private final int duracaoMinutos;

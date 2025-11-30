@@ -1,0 +1,20 @@
+{
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-24",
+            "path": "/Library/Java/JavaVirtualMachines/jdk-24.jdk/Contents/Home",
+            "default": true
+        }
+    ],
+    "java.home": "/Library/Java/JavaVirtualMachines/jdk-24.jdk/Contents/Home",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.project.sourcePaths": [
+        "src/main",
+        "src/test"
+    ],
+    "java.project.outputPath": "build",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ]
+}
+

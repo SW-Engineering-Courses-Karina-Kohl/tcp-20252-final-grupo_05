@@ -18,7 +18,7 @@ trap cleanup EXIT
 # configurações
 LOG_CONFIG="config/tinylog.properties"
 
-CLASSPATH="lib/tinylog-api-2.7.0.jar:lib/tinylog-impl-2.7.0.jar:src/main:bin"
+CLASSPATH="lib/tinylog-api-2.7.0.jar:lib/tinylog-impl-2.7.0.jar:src/main:src/resources:."
 
 echo ""
 echo "[1/3] Preparando Ambiente..."
@@ -33,10 +33,12 @@ fi
 echo ""
 echo "[2/3] Compilando para pasta temporaria 'bin'..."
 # -d bin joga os .class para dentro da pasta bin
-javac -cp "$CLASSPATH" -d bin src/main/*.java src/main/ui/*.java src/main/models/*.java src/main/service/*.java
+javac -cp "$CLASSPATH" -d bin src/main/*.java src/main/ui/*.java src/main/models/*.java src/main/service/*.java src/main/service/autenticacao/*.java
 
 echo ""
 echo "[3/3] Executando Aplicacao..."
-java -Dtinylog.configuration="$LOG_CONFIG" -cp "$CLASSPATH" main.Main
+# CLASSPATH para execução: precisa incluir bin/ onde estão os .class compilados
+RUNTIME_CLASSPATH="lib/tinylog-api-2.7.0.jar:lib/tinylog-impl-2.7.0.jar:bin:src/resources:."
+java -Dtinylog.configuration="$LOG_CONFIG" -cp "$RUNTIME_CLASSPATH" main.Main
 
 # a funcao cleanup roda automaticamente aqui

@@ -1,8 +1,11 @@
 package main.ui;
 
+import main.service.autenticacao.Autenticacao;
+import main.service.autenticacao.CredenciaisInvalidasException;
+import org.tinylog.Logger;
+
 import javax.swing.*;
 import java.awt.*;
-import org.tinylog.Logger;
 
 public class TelaLogin extends JPanel {
     
@@ -10,8 +13,11 @@ public class TelaLogin extends JPanel {
     private JPasswordField campoSenha;
     private JButton botaoEntrar;
     private JButton botaoCadastro;
+    private JLabel labelErro;
+    private Autenticacao autenticacao;
     
-    public TelaLogin() {
+    public TelaLogin(Autenticacao autenticacao) {
+        this.autenticacao = autenticacao;
         setLayout(new BorderLayout());
         
         JPanel painelPrincipal = new JPanel(new GridBagLayout());
@@ -108,20 +114,33 @@ public class TelaLogin extends JPanel {
         
         campoSenha = new JPasswordField(20);
         campoSenha.setFont(new Font("Arial", Font.PLAIN, 14));
+        campoSenha.addActionListener(e -> realizarLogin()); // Enter no campo senha
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(0, 20, 20, 20);
+        gbc.insets = new Insets(0, 20, 10, 20);
         painel.add(campoSenha, gbc);
+
+        // Label para mensagens de erro
+        labelErro = new JLabel("");
+        labelErro.setFont(new Font("Arial", Font.PLAIN, 12));
+        labelErro.setForeground(Color.RED);
+        labelErro.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 20, 10, 20);
+        painel.add(labelErro, gbc);
         
         botaoEntrar = new JButton("Entrar");
         botaoEntrar.setFont(new Font("Arial", Font.BOLD, 14));
         botaoEntrar.addActionListener(e -> {
-            Logger.info("Usuário acionou o botão de login com email: {}.", campoEmail.getText());
+            realizarLogin();
         });
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 20, 10, 20);
@@ -138,12 +157,49 @@ public class TelaLogin extends JPanel {
             cardLayout.show(getParent(), "CADASTRO");
         });
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
         gbc.insets = new Insets(10, 20, 20, 20);
         painel.add(botaoCadastro, gbc);
         
         return painel;
+    }
+
+    /**
+     * Realiza a autenticação do usuário.
+     */
+    private void realizarLogin() {
+        String email = campoEmail.getText().trim();
+        String senha = new String(campoSenha.getPassword());
+
+        // Limpar mensagem de erro anterior
+        labelErro.setText("");
+
+        // Validação básica
+        if (email.isEmpty() || senha.isEmpty()) {
+            labelErro.setText("Por favor, preencha todos os campos.");
+            return;
+        }
+
+        try {
+            autenticacao.autenticar(email, senha);
+            Logger.info("Login bem-sucedido para o email: {}", email);
+            
+            // Navegar para a tela inicial
+            CardLayout cardLayout = (CardLayout) getParent().getLayout();
+            cardLayout.show(getParent(), "HOME");
+            
+            // Limpar campos
+            campoEmail.setText("");
+            campoSenha.setText("");
+            
+        } catch (CredenciaisInvalidasException e) {
+            labelErro.setText("Email ou senha inválidos. Tente novamente.");
+            Logger.warn("Tentativa de login falhou: {}", e.getMessage());
+        } catch (Exception e) {
+            labelErro.setText("Erro ao realizar login. Tente novamente.");
+            Logger.error(e, "Erro inesperado ao realizar login");
+        }
     }
     
     public JTextField getCampoEmail() {
