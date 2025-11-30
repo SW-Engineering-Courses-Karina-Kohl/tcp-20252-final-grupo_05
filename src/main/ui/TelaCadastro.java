@@ -2,6 +2,7 @@ package main.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import org.tinylog.Logger;
 
 public class TelaCadastro extends JPanel {
     
@@ -136,6 +137,9 @@ public class TelaCadastro extends JPanel {
         
         botaoCadastrar = new JButton("Cadastrar");
         botaoCadastrar.setFont(new Font("Arial", Font.BOLD, 14));
+        botaoCadastrar.addActionListener(e -> {
+            Logger.info("Usuário acionou o botão de cadastro com email: {}.", campoEmail.getText());
+        });
         gbc.gridx = 0;
         gbc.gridy = 7;
         gbc.gridwidth = 2;
@@ -149,6 +153,7 @@ public class TelaCadastro extends JPanel {
         botaoLogin.setContentAreaFilled(false);
         botaoLogin.setForeground(new Color(70, 130, 180));
         botaoLogin.addActionListener(e -> {
+            Logger.debug("Navegando da tela de cadastro para a tela de login.");
             CardLayout cardLayout = (CardLayout) getParent().getLayout();
             cardLayout.show(getParent(), "LOGIN");
         });

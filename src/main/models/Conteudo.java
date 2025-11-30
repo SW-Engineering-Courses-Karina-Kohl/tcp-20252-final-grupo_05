@@ -3,6 +3,7 @@ package main.models;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.tinylog.Logger;
 
 public abstract class Conteudo {
 
@@ -13,10 +14,12 @@ public abstract class Conteudo {
     public Conteudo(String titulo, LocalDate dataLanc) {
 
         if (titulo == null || titulo.isBlank()) {
+            Logger.error("Falha ao criar Conteudo: título inválido (nulo ou em branco).");
             throw new IllegalArgumentException("Título não pode ser nulo");
         }
 
         if (dataLanc == null) {
+            Logger.error("Falha ao criar Conteudo '{}': data de lançamento nula.", titulo);
             throw new IllegalArgumentException("Data de lançamento não pode ser nula");
         }
 
@@ -71,6 +74,8 @@ public abstract class Conteudo {
         }
 
         if (somaPesos == 0) {
+            Logger.error("Erro ao calcular média ponderada para o conteúdo '{}': soma de pesos igual a zero.",
+                    this.titulo);
             throw new IllegalStateException("Não é possível calcular a média: soma de pesos igual a zero.");
         }
 
