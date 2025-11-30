@@ -2,6 +2,7 @@ package main.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import org.tinylog.Logger;
 
 public class TelaInicial extends JPanel {
     
@@ -16,6 +17,7 @@ public class TelaInicial extends JPanel {
         
         botaoDetalhes = new JButton("Ir para Detalhes");
         botaoDetalhes.addActionListener(e -> {
+            Logger.debug("Usuário navegou da tela inicial para a tela de detalhes.");
             CardLayout cardLayout = (CardLayout) getParent().getLayout();
             cardLayout.show(getParent(), "DETALHES");
         });

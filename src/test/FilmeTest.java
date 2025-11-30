@@ -22,10 +22,10 @@ public class FilmeTest {
     @Test
     void calculaMediaPonderadaCorreta() {
         Filme filme = new Filme("Teste", LocalDate.now(), 120, "Diretor");
-        arigo.avaliar(filme, 8, "Bom");
-        critico.avaliar(filme, 6, "Regular");
+        arigo.avaliar(filme, 4, "Bom");
+        critico.avaliar(filme, 5, "Excelente");
 
-        double esperado = (8 * 1 + 6 * 2) / 3.0;
+        double esperado = (4 * 1 + 5 * 2) / 3.0;
         assertEquals(esperado, filme.calcularMediaPonderada(), 0.0001);
     }
 
@@ -38,7 +38,7 @@ public class FilmeTest {
     @Test
     void lancaExcecaoQuandoPesoTotalForZero() {
         Filme filme = new Filme("Erro de Peso", LocalDate.now(), 100, "Diretor");
-        Avaliacao invalida = new Avaliacao(10, 0, "Invalida", UUID.randomUUID());
+        Avaliacao invalida = new Avaliacao(5, 0, "Invalida", UUID.randomUUID());
         filme.adicionarAvaliacao(invalida);
         assertThrows(IllegalStateException.class, filme::calcularMediaPonderada);
     }

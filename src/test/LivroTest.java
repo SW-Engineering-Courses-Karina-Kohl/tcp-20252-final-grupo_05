@@ -21,10 +21,10 @@ public class LivroTest {
     @Test
     void calculaMediaPonderadaLivro() {
         Livro livro = new Livro("LivroTeste", LocalDate.now(), "Autor", "Editora", 200);
-        arigo.avaliar(livro, 7, "Bom");
-        critico.avaliar(livro, 9, "Ótimo");
+        arigo.avaliar(livro, 4, "Bom");
+        critico.avaliar(livro, 5, "Ótimo");
 
-        double esperado = (7 * 1 + 9 * 2) / 3.0;
+        double esperado = (4 * 1 + 5 * 2) / 3.0;
         assertEquals(esperado, livro.calcularMediaPonderada(), 0.0001);
     }
 

@@ -3,6 +3,7 @@ package main.service;
 import main.models.Arigo;
 import main.models.Avaliacao;
 import main.models.Critico;
+import org.tinylog.Logger;
 
 public class ServicoPromocao {
 
@@ -16,6 +17,8 @@ public class ServicoPromocao {
      */
 
     public Critico tentarPromover(Arigo arigo) {
+        Logger.info("Iniciando tentativa de promoção para o usuário {}.", arigo.getId());
+
         int totalLikes = 0;
 
         //Soma todos os likes obtidos em todas as avaliacoes feitas pelo Arigo.
@@ -23,15 +26,17 @@ public class ServicoPromocao {
             totalLikes += avaliacao.getLikes();
         }
 
-        if(totalLikes >= LIMITE_LIKES) {
+        if (totalLikes >= LIMITE_LIKES) {
             //Passa as informacoes do usuario de um objeto Arigo para um objeto Crítico.
             Critico novoCritico = new Critico(arigo.getNome(), arigo.getDataNasc(), arigo.getEmail());
 
             novoCritico.setId(arigo.getId()); //mantém mesmo ID.
 
+            Logger.info("Usuário {} promovido a crítico. Total de likes: {}.", arigo.getId(), totalLikes);
+
             return novoCritico;
         }
-
+        Logger.warn("Usuário {} não atingiu o limite de likes para promoção ({} / {}).", arigo.getId(), totalLikes, LIMITE_LIKES);
         return null;
     }
 }
