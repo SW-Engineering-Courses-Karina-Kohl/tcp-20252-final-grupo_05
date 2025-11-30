@@ -15,6 +15,7 @@ public class TelaLogin extends JPanel {
     private JButton botaoCadastro;
     private JLabel labelErro;
     private Autenticacao autenticacao;
+    private GerenciadorTelas gerenciadorTelas;
     
     public TelaLogin(Autenticacao autenticacao) {
         this.autenticacao = autenticacao;
@@ -153,8 +154,13 @@ public class TelaLogin extends JPanel {
         botaoCadastro.setForeground(new Color(70, 130, 180));
         botaoCadastro.addActionListener(e -> {
             Logger.debug("Navegando da tela de login para a tela de cadastro.");
-            CardLayout cardLayout = (CardLayout) getParent().getLayout();
-            cardLayout.show(getParent(), "CADASTRO");
+            if (gerenciadorTelas != null) {
+                gerenciadorTelas.navegarParaCadastro();
+            } else {
+                // Fallback caso o gerenciador não tenha sido configurado
+                CardLayout cardLayout = (CardLayout) getParent().getLayout();
+                cardLayout.show(getParent(), "CADASTRO");
+            }
         });
         gbc.gridx = 0;
         gbc.gridy = 7;
@@ -185,9 +191,21 @@ public class TelaLogin extends JPanel {
             autenticacao.autenticar(email, senha);
             Logger.info("Login bem-sucedido para o email: {}", email);
             
-            // Navegar para a tela inicial
-            CardLayout cardLayout = (CardLayout) getParent().getLayout();
-            cardLayout.show(getParent(), "HOME");
+            // Navegar para a tela inicial usando o gerenciador
+            if (gerenciadorTelas != null) {
+                gerenciadorTelas.navegarParaHome();
+            } else {
+                // Fallback caso o gerenciador não tenha sido configurado
+                CardLayout cardLayout = (CardLayout) getParent().getLayout();
+                JPanel painelPrincipal = (JPanel) getParent();
+                for (Component comp : painelPrincipal.getComponents()) {
+                    if (comp instanceof TelaInicial telaInicial) {
+                        telaInicial.render();
+                        break;
+                    }
+                }
+                cardLayout.show(getParent(), "HOME");
+            }
             
             // Limpar campos
             campoEmail.setText("");
@@ -212,6 +230,15 @@ public class TelaLogin extends JPanel {
     
     public JButton getBotaoEntrar() {
         return botaoEntrar;
+    }
+    
+    /**
+     * Define o gerenciador de telas para permitir navegação e renderização.
+     * 
+     * @param gerenciadorTelas O gerenciador de telas
+     */
+    public void setGerenciadorTelas(GerenciadorTelas gerenciadorTelas) {
+        this.gerenciadorTelas = gerenciadorTelas;
     }
 }
 

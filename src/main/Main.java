@@ -18,7 +18,7 @@ public class Main {
         Context context = Context.initialize(carregador);
 
         // Criar serviço de autenticação
-        Autenticacao autenticacao = new ServicoAutenticacao(context);
+        Autenticacao autenticacao = new ServicoAutenticacao(context, false);
 
         // 3 - Iniciar interface gráfica
         SwingUtilities.invokeLater(() -> {
@@ -40,15 +40,27 @@ public class Main {
             painelPrincipal.add(telaInicial, "HOME");
             painelPrincipal.add(telaDetalhes, "DETALHES");
             
+            // Criar gerenciador de telas
+            GerenciadorTelas gerenciadorTelas = new GerenciadorTelas(
+                painelPrincipal, cardLayout,
+                telaLogin, telaCadastro, telaInicial, telaDetalhes
+            );
+            
+            // Passar gerenciador para as telas que precisam dele
+            telaLogin.setGerenciadorTelas(gerenciadorTelas);
+            telaCadastro.setGerenciadorTelas(gerenciadorTelas);
+            
             frame.add(painelPrincipal);
 
             try {
                 if (autenticacao.estaAutenticado()) {
-                    cardLayout.show(painelPrincipal, "HOME");
+                    // Atualizar a tela inicial com os dados do usuário antes de exibir
+                    gerenciadorTelas.navegarParaHome();
+                    Logger.info("Interface gráfica carregada. Exibindo tela de home.");
                 } else {
-                    cardLayout.show(painelPrincipal, "LOGIN");
+                    gerenciadorTelas.navegarParaLogin();
+                    Logger.info("Interface gráfica carregada. Exibindo tela de login.");
                 }
-                Logger.info("Interface gráfica carregada. Exibindo tela de login.");
                 frame.setVisible(true);
             } catch (Exception e) {
                 Logger.error(e, "Erro crítico ao exibir a interface gráfica inicial.");

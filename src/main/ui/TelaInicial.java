@@ -59,16 +59,8 @@ public class TelaInicial extends JPanel {
         painelUsuario.setBackground(Color.WHITE);
         painelUsuario.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
         
-        String nomeUsuario = "Usuário";
-        try {
-            if (autenticacao.estaAutenticado()) {
-                nomeUsuario = autenticacao.getPessoaAutenticada().getNome();
-            }
-        } catch (Exception e) {
-            Logger.warn("Erro ao obter nome do usuário: {}", e.getMessage());
-        }
-        
-        botaoUsuario = new JButton(nomeUsuario);
+        // Inicializa com valor padrão, será atualizado quando o usuário fizer login
+        botaoUsuario = new JButton("Usuário");
         botaoUsuario.setFont(new Font("Arial", Font.PLAIN, 14));
         botaoUsuario.setForeground(new Color(70, 130, 180));
         botaoUsuario.setBorderPainted(false);
@@ -172,6 +164,36 @@ public class TelaInicial extends JPanel {
     
     public JButton getBotaoUsuario() {
         return botaoUsuario;
+    }
+    
+    /**
+     * Renderiza/atualiza toda a tela com os dados atuais.
+     * Deve ser chamado quando o usuário fizer login, quando a tela for exibida,
+     * ou sempre que houver mudanças que requerem atualização da interface.
+     */
+    public void render() {
+        atualizarUsuario();
+        // Aqui podem ser adicionadas outras atualizações da tela no futuro
+        // Por exemplo: atualizarCards(), atualizarPesquisa(), etc.
+    }
+    
+    /**
+     * Atualiza o nome do usuário exibido na navbar.
+     */
+    private void atualizarUsuario() {
+        try {
+            if (autenticacao.estaAutenticado()) {
+                String nomeUsuario = autenticacao.getPessoaAutenticada().getNome();
+                botaoUsuario.setText(nomeUsuario);
+                Logger.debug("Nome do usuário atualizado na tela inicial: {}", nomeUsuario);
+            } else {
+                botaoUsuario.setText("Usuário");
+                Logger.warn("Tentativa de atualizar usuário, mas nenhum usuário está autenticado");
+            }
+        } catch (Exception e) {
+            Logger.warn("Erro ao atualizar nome do usuário: {}", e.getMessage());
+            botaoUsuario.setText("Usuário");
+        }
     }
 }
 

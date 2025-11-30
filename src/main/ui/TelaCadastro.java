@@ -18,6 +18,7 @@ public class TelaCadastro extends JPanel {
     private JLabel labelErro;
     private JLabel labelSucesso;
     private Autenticacao autenticacao;
+    private GerenciadorTelas gerenciadorTelas;
     
     public TelaCadastro(Autenticacao autenticacao) {
         this.autenticacao = autenticacao;
@@ -188,8 +189,13 @@ public class TelaCadastro extends JPanel {
         botaoLogin.setForeground(new Color(70, 130, 180));
         botaoLogin.addActionListener(e -> {
             Logger.debug("Navegando da tela de cadastro para a tela de login.");
-            CardLayout cardLayout = (CardLayout) getParent().getLayout();
-            cardLayout.show(getParent(), "LOGIN");
+            if (gerenciadorTelas != null) {
+                gerenciadorTelas.navegarParaLogin();
+            } else {
+                // Fallback caso o gerenciador não tenha sido configurado
+                CardLayout cardLayout = (CardLayout) getParent().getLayout();
+                cardLayout.show(getParent(), "LOGIN");
+            }
         });
         gbc.gridx = 0;
         gbc.gridy = 10;
@@ -239,10 +245,15 @@ public class TelaCadastro extends JPanel {
             campoEmail.setText("");
             campoSenha.setText("");
             
-            // Aguardar um pouco e navegar para login
+            // Aguardar um pouco e navegar para home
             Timer timer = new Timer(2000, e -> {
-                CardLayout cardLayout = (CardLayout) getParent().getLayout();
-                cardLayout.show(getParent(), "HOME");
+                if (gerenciadorTelas != null) {
+                    gerenciadorTelas.navegarParaHome();
+                } else {
+                    // Fallback caso o gerenciador não tenha sido configurado
+                    CardLayout cardLayout = (CardLayout) getParent().getLayout();
+                    cardLayout.show(getParent(), "HOME");
+                }
                 labelSucesso.setText(" ");
             });
             timer.setRepeats(false);
@@ -271,6 +282,15 @@ public class TelaCadastro extends JPanel {
     
     public JButton getBotaoCadastrar() {
         return botaoCadastrar;
+    }
+    
+    /**
+     * Define o gerenciador de telas para permitir navegação e renderização.
+     * 
+     * @param gerenciadorTelas O gerenciador de telas
+     */
+    public void setGerenciadorTelas(GerenciadorTelas gerenciadorTelas) {
+        this.gerenciadorTelas = gerenciadorTelas;
     }
 }
 
