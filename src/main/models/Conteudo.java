@@ -1,12 +1,14 @@
 package main.models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.tinylog.Logger;
 
-public abstract class Conteudo {
+public abstract class Conteudo implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private UUID id;
     private String titulo;

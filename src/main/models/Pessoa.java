@@ -1,12 +1,14 @@
 package main.models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 
-public abstract class Pessoa {
+public abstract class Pessoa implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private UUID id;
     private String nome;

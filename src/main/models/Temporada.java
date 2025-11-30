@@ -1,9 +1,11 @@
 package main.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Temporada {
+public class Temporada implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final List<Episodio> episodios;
 

@@ -1,8 +1,10 @@
 package main.models;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Avaliacao {
+public class Avaliacao implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private UUID id;
     private int nota; 
