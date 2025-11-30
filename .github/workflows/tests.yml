@@ -22,11 +22,15 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
-      - name: Instalar JUnit 5
+      - name: Instalar JUnit 5 e tinylog
         run: |
           mkdir -p lib
           curl -L -o lib/junit-platform-console-standalone.jar \
             https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.2/junit-platform-console-standalone-1.10.2.jar
+          curl -L -o lib/tinylog-api-2.7.0.jar \
+            https://repo1.maven.org/maven2/org/tinylog/tinylog-api/2.7.0/tinylog-api-2.7.0.jar
+          curl -L -o lib/tinylog-impl-2.7.0.jar \
+            https://repo1.maven.org/maven2/org/tinylog/tinylog-impl/2.7.0/tinylog-impl-2.7.0.jar
 
       - name: Compilar testes
         run: |
