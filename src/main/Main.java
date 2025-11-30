@@ -18,7 +18,7 @@ public class Main {
         Context context = Context.initialize(carregador);
 
         // Criar serviço de autenticação
-        Autenticacao autenticacao = new ServicoAutenticacao(context, true);
+        Autenticacao autenticacao = new ServicoAutenticacao(context, false);
 
         // 3 - Iniciar interface gráfica
         SwingUtilities.invokeLater(() -> {
