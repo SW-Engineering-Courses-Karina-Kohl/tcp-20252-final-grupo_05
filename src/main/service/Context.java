@@ -14,24 +14,24 @@ public class Context implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final String DEFAULT_SAVE_PATH = "context.dat";
     
-    public final Repository<Pessoa> pessoas;
-    public final Repository<Filme> filmes;
-    public final Repository<Livro> livros;
-    public final Repository<Jogo> jogos;
-    public final Repository<Serie> series;
-    public final Repository<Avaliacao> avaliacoes;
+    public final BaseRepository<Pessoa> pessoas;
+    public final ConteudoRepository<Filme> filmes;
+    public final ConteudoRepository<Livro> livros;
+    public final ConteudoRepository<Jogo> jogos;
+    public final ConteudoRepository<Serie> series;
+    public final BaseRepository<Avaliacao> avaliacoes;
 
     /**
      * Constructor that creates an empty context with empty repositories.
      * Use initialize() to load data from CarregadorDeDados.
      */
     public Context() {
-        this.pessoas = new Repository<>(new ArrayList<>());
-        this.filmes = new Repository<>(new ArrayList<>());
-        this.livros = new Repository<>(new ArrayList<>());
-        this.jogos = new Repository<>(new ArrayList<>());
-        this.series = new Repository<>(new ArrayList<>());
-        this.avaliacoes = new Repository<>(new ArrayList<>());
+        this.pessoas = new BaseRepository<>(new ArrayList<>());
+        this.filmes = new ConteudoRepository<>(new ArrayList<>());
+        this.livros = new ConteudoRepository<>(new ArrayList<>());
+        this.jogos = new ConteudoRepository<>(new ArrayList<>());
+        this.series = new ConteudoRepository<>(new ArrayList<>());
+        this.avaliacoes = new BaseRepository<>(new ArrayList<>());
     }
 
     /**
@@ -194,6 +194,24 @@ public class Context implements Serializable {
             Logger.info("Contexto carregado de: {}", filePath);
             return context;
         }
+    }
+
+    /**
+     * Retorna os 3 conteúdos com mais avaliações, combinando todos os tipos (Filme, Livro, Jogo, Serie).
+     * 
+     * @return Lista com os 3 conteúdos que possuem mais avaliações
+     */
+    public List<Conteudo> getDestaque() {
+        List<Conteudo> todosConteudos = new ArrayList<>();
+        todosConteudos.addAll(filmes.findAll());
+        todosConteudos.addAll(livros.findAll());
+        todosConteudos.addAll(jogos.findAll());
+        todosConteudos.addAll(series.findAll());
+        
+        return todosConteudos.stream()
+                .sorted(java.util.Comparator.comparingInt((Conteudo c) -> c.getAvaliacoes().size()).reversed())
+                .limit(3)
+                .collect(java.util.stream.Collectors.toList());
     }
 }
 

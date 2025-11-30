@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Generic repository class for in-memory data storage and retrieval.
+ * Base repository class for in-memory data storage and retrieval.
  * Provides basic CRUD operations similar to .NET DbContext pattern.
  * 
  * @param <T> The entity type that must have a getId() method returning UUID
  */
-public class Repository<T> implements Serializable {
+public class BaseRepository<T> implements Serializable {
     private static final long serialVersionUID = 1L;
     private List<T> entities;
 
@@ -20,7 +20,7 @@ public class Repository<T> implements Serializable {
      * 
      * @param initialEntities The initial list of entities to populate the repository
      */
-    public Repository(List<T> initialEntities) {
+    public BaseRepository(List<T> initialEntities) {
         this.entities = new ArrayList<>(initialEntities);
     }
 
