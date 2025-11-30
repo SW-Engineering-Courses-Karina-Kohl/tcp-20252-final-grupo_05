@@ -61,6 +61,39 @@ public class TelaInicial extends JPanel {
             BorderFactory.createLineBorder(new Color(200, 200, 200)),
             BorderFactory.createEmptyBorder(8, 12, 8, 12)
         ));
+        // Adicionar listener para atualizar resultados quando o usuário digitar
+        campoPesquisa.addActionListener(e -> {
+            // Quando Enter é pressionado, atualizar a tela
+            render();
+        });
+        // Atualizar enquanto digita (com debounce seria melhor, mas por simplicidade vamos usar um timer)
+        campoPesquisa.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            private javax.swing.Timer timer;
+            
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                atualizarComDelay();
+            }
+            
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                atualizarComDelay();
+            }
+            
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                atualizarComDelay();
+            }
+            
+            private void atualizarComDelay() {
+                if (timer != null && timer.isRunning()) {
+                    timer.stop();
+                }
+                timer = new javax.swing.Timer(500, evt -> render());
+                timer.setRepeats(false);
+                timer.start();
+            }
+        });
         painelPesquisa.add(campoPesquisa);
         navbar.add(painelPesquisa, BorderLayout.CENTER);
         
@@ -97,11 +130,20 @@ public class TelaInicial extends JPanel {
         conteudo.setLayout(new BoxLayout(conteudo, BoxLayout.Y_AXIS));
         conteudo.setBackground(new Color(245, 245, 245));
         
-        // Buscar dados reais do Context
-        List<Filme> filmes = context.filmes.findAll();
-        List<Livro> livros = context.livros.findAll();
-        List<Jogo> jogos = context.jogos.findAll();
-        List<Serie> series = context.series.findAll();
+        // Obter termo de busca do campo de pesquisa
+        String termoBusca = null;
+        if (campoPesquisa != null) {
+            String textoBusca = campoPesquisa.getText().trim();
+            if (!textoBusca.isEmpty()) {
+                termoBusca = textoBusca;
+            }
+        }
+        
+        // Buscar dados reais do Context, com filtro se houver termo de busca
+        List<Filme> filmes = context.filmes.findAll(termoBusca);
+        List<Livro> livros = context.livros.findAll(termoBusca);
+        List<Jogo> jogos = context.jogos.findAll(termoBusca);
+        List<Serie> series = context.series.findAll(termoBusca);
         
         // Criar seções para cada tipo de conteúdo
         conteudo.add(criarSecaoConteudo("Filmes", "FILMES", filmes));
@@ -173,14 +215,23 @@ public class TelaInicial extends JPanel {
         painelCards.setLayout(new BoxLayout(painelCards, BoxLayout.Y_AXIS));
         painelCards.setBackground(new Color(245, 245, 245));
         
-        // Mostrar apenas os primeiros 4 conteúdos
-        int quantidadeCards = Math.min(conteudos.size(), 4);
-        for (int i = 0; i < quantidadeCards; i++) {
-            Conteudo conteudo = conteudos.get(i);
-            JPanel card = criarCardComConteudo(conteudo);
-            painelCards.add(card);
-            if (i < quantidadeCards - 1) {
-                painelCards.add(Box.createVerticalStrut(15));
+        if (conteudos.isEmpty()) {
+            // Mostrar mensagem quando não houver conteúdos
+            JLabel labelVazio = new JLabel("Nenhum resultado em " + tituloSecao.toLowerCase());
+            labelVazio.setFont(new Font("Arial", Font.PLAIN, 14));
+            labelVazio.setForeground(new Color(150, 150, 150));
+            labelVazio.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+            painelCards.add(labelVazio);
+        } else {
+            // Mostrar apenas os primeiros 4 conteúdos
+            int quantidadeCards = Math.min(conteudos.size(), 4);
+            for (int i = 0; i < quantidadeCards; i++) {
+                Conteudo conteudo = conteudos.get(i);
+                JPanel card = criarCardComConteudo(conteudo);
+                painelCards.add(card);
+                if (i < quantidadeCards - 1) {
+                    painelCards.add(Box.createVerticalStrut(15));
+                }
             }
         }
         
