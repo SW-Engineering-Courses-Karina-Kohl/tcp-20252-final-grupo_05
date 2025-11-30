@@ -1,14 +1,20 @@
 package main.ui;
 
+import main.models.Livro;
+import main.service.Context;
+import org.tinylog.Logger;
+
 import javax.swing.*;
 import java.awt.*;
-import org.tinylog.Logger;
+import java.util.List;
 
 public class TelaLivroLista extends JPanel {
     
     private GerenciadorTelas gerenciadorTelas;
+    private Context context;
     
-    public TelaLivroLista() {
+    public TelaLivroLista(Context context) {
+        this.context = context;
         setLayout(new BorderLayout());
         setBackground(new Color(245, 245, 245));
         
@@ -50,25 +56,28 @@ public class TelaLivroLista extends JPanel {
         conteudo.setBackground(new Color(245, 245, 245));
         conteudo.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
         
-        // Dados mockados de livros
-        String[] livros = {
-            "1984", "O Senhor dos Anéis", "Duna", "Neuromancer",
-            "A Revolução dos Bichos", "O Hobbit", "Fundação", "Neuromancer",
-            "O Guia do Mochileiro das Galáxias", "Cem Anos de Solidão", "Dom Quixote", "Crime e Castigo"
-        };
+        // Buscar livros do Context
+        List<Livro> livros = context.livros.findAll();
         
-        for (int i = 0; i < livros.length; i++) {
-            JPanel card = criarCard(livros[i]);
-            conteudo.add(card);
-            if (i < livros.length - 1) {
-                conteudo.add(Box.createVerticalStrut(15));
+        if (livros.isEmpty()) {
+            JLabel labelVazio = new JLabel("Nenhum livro cadastrado.", SwingConstants.CENTER);
+            labelVazio.setFont(new Font("Arial", Font.PLAIN, 16));
+            labelVazio.setForeground(new Color(150, 150, 150));
+            conteudo.add(labelVazio);
+        } else {
+            for (int i = 0; i < livros.size(); i++) {
+                JPanel card = criarCard(livros.get(i));
+                conteudo.add(card);
+                if (i < livros.size() - 1) {
+                    conteudo.add(Box.createVerticalStrut(15));
+                }
             }
         }
         
         return conteudo;
     }
     
-    private JPanel criarCard(String titulo) {
+    private JPanel criarCard(Livro livro) {
         JPanel card = new JPanel(new BorderLayout(15, 0));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
@@ -93,11 +102,30 @@ public class TelaLivroLista extends JPanel {
         painelConteudo.setBackground(Color.WHITE);
         painelConteudo.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
-        JLabel labelTitulo = new JLabel(titulo);
+        JLabel labelTitulo = new JLabel(livro.getTitulo());
         labelTitulo.setFont(new Font("Arial", Font.BOLD, 18));
         labelTitulo.setForeground(new Color(50, 50, 50));
         
+        // Informações adicionais
+        JPanel painelInfo = new JPanel();
+        painelInfo.setLayout(new BoxLayout(painelInfo, BoxLayout.Y_AXIS));
+        painelInfo.setBackground(Color.WHITE);
+        
+        JLabel labelData = new JLabel("Lançamento: " + livro.getDataLanc().toString());
+        labelData.setFont(new Font("Arial", Font.PLAIN, 12));
+        labelData.setForeground(new Color(100, 100, 100));
+        
+        int numAvaliacoes = livro.getAvaliacoes().size();
+        JLabel labelAvaliacoes = new JLabel("Avaliações: " + numAvaliacoes);
+        labelAvaliacoes.setFont(new Font("Arial", Font.PLAIN, 12));
+        labelAvaliacoes.setForeground(new Color(100, 100, 100));
+        
+        painelInfo.add(labelData);
+        painelInfo.add(Box.createVerticalStrut(5));
+        painelInfo.add(labelAvaliacoes);
+        
         painelConteudo.add(labelTitulo, BorderLayout.NORTH);
+        painelConteudo.add(painelInfo, BorderLayout.CENTER);
         card.add(painelConteudo, BorderLayout.CENTER);
         
         return card;

@@ -1,14 +1,20 @@
 package main.ui;
 
+import main.models.Serie;
+import main.service.Context;
+import org.tinylog.Logger;
+
 import javax.swing.*;
 import java.awt.*;
-import org.tinylog.Logger;
+import java.util.List;
 
 public class TelaSerieLista extends JPanel {
     
     private GerenciadorTelas gerenciadorTelas;
+    private Context context;
     
-    public TelaSerieLista() {
+    public TelaSerieLista(Context context) {
+        this.context = context;
         setLayout(new BorderLayout());
         setBackground(new Color(245, 245, 245));
         
@@ -50,25 +56,28 @@ public class TelaSerieLista extends JPanel {
         conteudo.setBackground(new Color(245, 245, 245));
         conteudo.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
         
-        // Dados mockados de séries
-        String[] series = {
-            "Breaking Bad", "Game of Thrones", "Stranger Things", "The Crown",
-            "The Office", "Friends", "The Sopranos", "The Wire",
-            "Better Call Saul", "True Detective", "Chernobyl", "Band of Brothers"
-        };
+        // Buscar séries do Context
+        List<Serie> series = context.series.findAll();
         
-        for (int i = 0; i < series.length; i++) {
-            JPanel card = criarCard(series[i]);
-            conteudo.add(card);
-            if (i < series.length - 1) {
-                conteudo.add(Box.createVerticalStrut(15));
+        if (series.isEmpty()) {
+            JLabel labelVazio = new JLabel("Nenhuma série cadastrada.", SwingConstants.CENTER);
+            labelVazio.setFont(new Font("Arial", Font.PLAIN, 16));
+            labelVazio.setForeground(new Color(150, 150, 150));
+            conteudo.add(labelVazio);
+        } else {
+            for (int i = 0; i < series.size(); i++) {
+                JPanel card = criarCard(series.get(i));
+                conteudo.add(card);
+                if (i < series.size() - 1) {
+                    conteudo.add(Box.createVerticalStrut(15));
+                }
             }
         }
         
         return conteudo;
     }
     
-    private JPanel criarCard(String titulo) {
+    private JPanel criarCard(Serie serie) {
         JPanel card = new JPanel(new BorderLayout(15, 0));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
@@ -93,11 +102,30 @@ public class TelaSerieLista extends JPanel {
         painelConteudo.setBackground(Color.WHITE);
         painelConteudo.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
-        JLabel labelTitulo = new JLabel(titulo);
+        JLabel labelTitulo = new JLabel(serie.getTitulo());
         labelTitulo.setFont(new Font("Arial", Font.BOLD, 18));
         labelTitulo.setForeground(new Color(50, 50, 50));
         
+        // Informações adicionais
+        JPanel painelInfo = new JPanel();
+        painelInfo.setLayout(new BoxLayout(painelInfo, BoxLayout.Y_AXIS));
+        painelInfo.setBackground(Color.WHITE);
+        
+        JLabel labelData = new JLabel("Lançamento: " + serie.getDataLanc().toString());
+        labelData.setFont(new Font("Arial", Font.PLAIN, 12));
+        labelData.setForeground(new Color(100, 100, 100));
+        
+        int numAvaliacoes = serie.getAvaliacoes().size();
+        JLabel labelAvaliacoes = new JLabel("Avaliações: " + numAvaliacoes);
+        labelAvaliacoes.setFont(new Font("Arial", Font.PLAIN, 12));
+        labelAvaliacoes.setForeground(new Color(100, 100, 100));
+        
+        painelInfo.add(labelData);
+        painelInfo.add(Box.createVerticalStrut(5));
+        painelInfo.add(labelAvaliacoes);
+        
         painelConteudo.add(labelTitulo, BorderLayout.NORTH);
+        painelConteudo.add(painelInfo, BorderLayout.CENTER);
         card.add(painelConteudo, BorderLayout.CENTER);
         
         return card;

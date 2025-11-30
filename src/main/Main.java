@@ -32,12 +32,12 @@ public class Main {
             
             TelaLogin telaLogin = new TelaLogin(autenticacao);
             TelaCadastro telaCadastro = new TelaCadastro(autenticacao);
-            TelaInicial telaInicial = new TelaInicial(autenticacao);
+            TelaInicial telaInicial = new TelaInicial(autenticacao, context);
             TelaDetalhes telaDetalhes = new TelaDetalhes();
-            TelaFilmeLista telaFilmeLista = new TelaFilmeLista();
-            TelaLivroLista telaLivroLista = new TelaLivroLista();
-            TelaJogoLista telaJogoLista = new TelaJogoLista();
-            TelaSerieLista telaSerieLista = new TelaSerieLista();
+            TelaFilmeLista telaFilmeLista = new TelaFilmeLista(context);
+            TelaLivroLista telaLivroLista = new TelaLivroLista(context);
+            TelaJogoLista telaJogoLista = new TelaJogoLista(context);
+            TelaSerieLista telaSerieLista = new TelaSerieLista(context);
             
             painelPrincipal.add(telaLogin, "LOGIN");
             painelPrincipal.add(telaCadastro, "CADASTRO");

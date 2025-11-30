@@ -1,20 +1,29 @@
 package main.ui;
 
+import main.models.Conteudo;
+import main.models.Filme;
+import main.models.Jogo;
+import main.models.Livro;
+import main.models.Serie;
+import main.service.Context;
 import main.service.autenticacao.Autenticacao;
 import org.tinylog.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class TelaInicial extends JPanel {
     
     private Autenticacao autenticacao;
+    private Context context;
     private JTextField campoPesquisa;
     private JButton botaoUsuario;
     private GerenciadorTelas gerenciadorTelas;
     
-    public TelaInicial(Autenticacao autenticacao) {
+    public TelaInicial(Autenticacao autenticacao, Context context) {
         this.autenticacao = autenticacao;
+        this.context = context;
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
         
@@ -88,20 +97,20 @@ public class TelaInicial extends JPanel {
         conteudo.setLayout(new BoxLayout(conteudo, BoxLayout.Y_AXIS));
         conteudo.setBackground(new Color(245, 245, 245));
         
-        // Dados mockados para cada tipo de conteúdo
-        String[] filmesMockados = {"Matrix", "Inception", "Interstellar", "Blade Runner 2049"};
-        String[] livrosMockados = {"1984", "O Senhor dos Anéis", "Duna", "Neuromancer"};
-        String[] jogosMockados = {"The Witcher 3", "Cyberpunk 2077", "Red Dead Redemption 2", "Elden Ring"};
-        String[] seriesMockados = {"Breaking Bad", "Game of Thrones", "Stranger Things", "The Crown"};
+        // Buscar dados reais do Context
+        List<Filme> filmes = context.filmes.findAll();
+        List<Livro> livros = context.livros.findAll();
+        List<Jogo> jogos = context.jogos.findAll();
+        List<Serie> series = context.series.findAll();
         
         // Criar seções para cada tipo de conteúdo
-        conteudo.add(criarSecaoConteudo("Filmes", "FILMES", filmesMockados));
+        conteudo.add(criarSecaoConteudo("Filmes", "FILMES", filmes));
         conteudo.add(Box.createVerticalStrut(30));
-        conteudo.add(criarSecaoConteudo("Livros", "LIVROS", livrosMockados));
+        conteudo.add(criarSecaoConteudo("Livros", "LIVROS", livros));
         conteudo.add(Box.createVerticalStrut(30));
-        conteudo.add(criarSecaoConteudo("Jogos", "JOGOS", jogosMockados));
+        conteudo.add(criarSecaoConteudo("Jogos", "JOGOS", jogos));
         conteudo.add(Box.createVerticalStrut(30));
-        conteudo.add(criarSecaoConteudo("Séries", "SERIES", seriesMockados));
+        conteudo.add(criarSecaoConteudo("Séries", "SERIES", series));
         
         // Adicionar padding
         conteudo.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
@@ -123,10 +132,10 @@ public class TelaInicial extends JPanel {
      * 
      * @param tituloSecao O título da seção (ex: "Filmes")
      * @param tipoConteudo O tipo de conteúdo para navegação (ex: "FILMES")
-     * @param titulosMockados Array com títulos mockados dos conteúdos
+     * @param conteudos Lista de conteúdos do tipo especificado
      * @return JPanel com a seção completa
      */
-    private JPanel criarSecaoConteudo(String tituloSecao, String tipoConteudo, String[] titulosMockados) {
+    private JPanel criarSecaoConteudo(String tituloSecao, String tipoConteudo, List<? extends Conteudo> conteudos) {
         JPanel secao = new JPanel();
         secao.setLayout(new BoxLayout(secao, BoxLayout.Y_AXIS));
         secao.setBackground(new Color(245, 245, 245));
@@ -164,10 +173,11 @@ public class TelaInicial extends JPanel {
         painelCards.setLayout(new BoxLayout(painelCards, BoxLayout.Y_AXIS));
         painelCards.setBackground(new Color(245, 245, 245));
         
-        // Mostrar apenas os primeiros 3-4 conteúdos
-        int quantidadeCards = Math.min(titulosMockados.length, 4);
+        // Mostrar apenas os primeiros 4 conteúdos
+        int quantidadeCards = Math.min(conteudos.size(), 4);
         for (int i = 0; i < quantidadeCards; i++) {
-            JPanel card = criarCardComConteudo(titulosMockados[i]);
+            Conteudo conteudo = conteudos.get(i);
+            JPanel card = criarCardComConteudo(conteudo);
             painelCards.add(card);
             if (i < quantidadeCards - 1) {
                 painelCards.add(Box.createVerticalStrut(15));
@@ -207,9 +217,9 @@ public class TelaInicial extends JPanel {
     }
     
     /**
-     * Cria um card com largura total, imagem placeholder e título mockado.
+     * Cria um card com largura total, imagem placeholder e título do conteúdo.
      */
-    private JPanel criarCardComConteudo(String titulo) {
+    private JPanel criarCardComConteudo(Conteudo conteudo) {
         JPanel card = new JPanel(new BorderLayout(15, 0));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
@@ -230,16 +240,35 @@ public class TelaInicial extends JPanel {
         
         card.add(placeholderImagem, BorderLayout.WEST);
         
-        // Conteúdo à direita (título)
+        // Conteúdo à direita (título e informações)
         JPanel painelConteudo = new JPanel(new BorderLayout());
         painelConteudo.setBackground(Color.WHITE);
         painelConteudo.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
-        JLabel labelTitulo = new JLabel(titulo);
+        JLabel labelTitulo = new JLabel(conteudo.getTitulo());
         labelTitulo.setFont(new Font("Arial", Font.BOLD, 18));
         labelTitulo.setForeground(new Color(50, 50, 50));
         
+        // Adicionar informações adicionais se disponíveis
+        JPanel painelInfo = new JPanel();
+        painelInfo.setLayout(new BoxLayout(painelInfo, BoxLayout.Y_AXIS));
+        painelInfo.setBackground(Color.WHITE);
+        
+        JLabel labelData = new JLabel("Lançamento: " + conteudo.getDataLanc().toString());
+        labelData.setFont(new Font("Arial", Font.PLAIN, 12));
+        labelData.setForeground(new Color(100, 100, 100));
+        
+        int numAvaliacoes = conteudo.getAvaliacoes().size();
+        JLabel labelAvaliacoes = new JLabel("Avaliações: " + numAvaliacoes);
+        labelAvaliacoes.setFont(new Font("Arial", Font.PLAIN, 12));
+        labelAvaliacoes.setForeground(new Color(100, 100, 100));
+        
+        painelInfo.add(labelData);
+        painelInfo.add(Box.createVerticalStrut(5));
+        painelInfo.add(labelAvaliacoes);
+        
         painelConteudo.add(labelTitulo, BorderLayout.NORTH);
+        painelConteudo.add(painelInfo, BorderLayout.CENTER);
         card.add(painelConteudo, BorderLayout.CENTER);
         
         return card;
@@ -259,9 +288,45 @@ public class TelaInicial extends JPanel {
      * ou sempre que houver mudanças que requerem atualização da interface.
      */
     public void render() {
+        // Garantir que a navbar existe antes de atualizar
+        boolean navbarExiste = false;
+        Component conteudoAtual = null;
+        
+        if (getLayout() instanceof BorderLayout layout) {
+            // Verificar se navbar existe
+            Component northComp = layout.getLayoutComponent(BorderLayout.NORTH);
+            if (northComp != null) {
+                navbarExiste = true;
+            }
+            
+            // Encontrar e remover apenas o conteúdo central
+            Component centerComp = layout.getLayoutComponent(BorderLayout.CENTER);
+            if (centerComp != null) {
+                conteudoAtual = centerComp;
+            }
+        }
+        
+        // Se a navbar não existe, recriar toda a tela
+        if (!navbarExiste) {
+            removeAll();
+            setLayout(new BorderLayout());
+            setBackground(Color.WHITE);
+            
+            JPanel navbar = criarNavbar();
+            add(navbar, BorderLayout.NORTH);
+        } else if (conteudoAtual != null) {
+            // Remove apenas o conteúdo central, mantém a navbar
+            remove(conteudoAtual);
+        }
+        
+        // Atualizar usuário após garantir que navbar existe
         atualizarUsuario();
-        // Aqui podem ser adicionadas outras atualizações da tela no futuro
-        // Por exemplo: atualizarCards(), atualizarPesquisa(), etc.
+        
+        JPanel novoConteudo = criarConteudo();
+        add(novoConteudo, BorderLayout.CENTER);
+        
+        revalidate();
+        repaint();
     }
     
     /**
