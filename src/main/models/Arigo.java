@@ -10,16 +10,32 @@ public class Arigo extends Pessoa implements Avaliador {
     
     /**
      * Construtor com ID opcional. Se o ID for null, gera um UUID aleatório.
+     * Define senha padrão se não fornecida.
      */
     public Arigo(UUID id, String nome, LocalDate dataNasc, String email){
         super(id, nome, dataNasc, email);
     }
+
+    /**
+     * Construtor com ID e senha.
+     */
+    public Arigo(UUID id, String nome, LocalDate dataNasc, String email, String senha){
+        super(id, nome, dataNasc, email, senha);
+    }
     
     /**
      * Construtor sem ID. Gera um UUID aleatório automaticamente.
+     * Define senha padrão se não fornecida.
      */
     public Arigo(String nome, LocalDate dataNasc, String email){
         super(nome, dataNasc, email);
+    }
+
+    /**
+     * Construtor sem ID mas com senha.
+     */
+    public Arigo(String nome, LocalDate dataNasc, String email, String senha){
+        super(nome, dataNasc, email, senha);
     }
 
     @Override
