@@ -63,8 +63,13 @@ public class ServicoAutenticacao implements Autenticacao {
         LocalDate dataNasc = LocalDate.now().minusYears(18);
         Arigo novoArigo = new Arigo(nome, dataNasc, email, senha);
         
-        context.pessoas.add(novoArigo);
-        Logger.info("Novo usuário registrado: {} ({})", nome, email);
+        try {
+            context.pessoas.add(novoArigo);
+            context.save();
+            Logger.info("Novo usuário registrado: " + nome + " (" + email + ")");
+        } catch (Exception e) {
+            Logger.error(e, "Erro ao salvar contexto após registro de novo usuário: " + e.getMessage());
+        }
     }
 
     @Override

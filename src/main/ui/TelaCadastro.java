@@ -1,8 +1,12 @@
 package main.ui;
 
+import main.service.autenticacao.Autenticacao;
+import main.service.autenticacao.EmailJaCadastradoException;
+import main.service.autenticacao.ServicoAutenticacao;
+import org.tinylog.Logger;
+
 import javax.swing.*;
 import java.awt.*;
-import org.tinylog.Logger;
 
 public class TelaCadastro extends JPanel {
     
@@ -11,8 +15,12 @@ public class TelaCadastro extends JPanel {
     private JPasswordField campoSenha;
     private JButton botaoCadastrar;
     private JButton botaoLogin;
+    private JLabel labelErro;
+    private JLabel labelSucesso;
+    private Autenticacao autenticacao;
     
-    public TelaCadastro() {
+    public TelaCadastro(Autenticacao autenticacao) {
+        this.autenticacao = autenticacao;
         setLayout(new BorderLayout());
         
         JPanel painelPrincipal = new JPanel(new GridBagLayout());
@@ -132,16 +140,42 @@ public class TelaCadastro extends JPanel {
         gbc.gridy = 6;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(0, 20, 20, 20);
+        gbc.insets = new Insets(0, 20, 10, 20);
         painel.add(campoSenha, gbc);
+
+        // Label para mensagens de erro
+        labelErro = new JLabel(" ");
+        labelErro.setFont(new Font("Arial", Font.PLAIN, 12));
+        labelErro.setForeground(Color.RED);
+        labelErro.setHorizontalAlignment(SwingConstants.CENTER);
+        labelErro.setPreferredSize(new Dimension(0, 20)); // Altura mínima
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 20, 5, 20);
+        painel.add(labelErro, gbc);
+
+        // Label para mensagens de sucesso
+        labelSucesso = new JLabel(" ");
+        labelSucesso.setFont(new Font("Arial", Font.PLAIN, 12));
+        labelSucesso.setForeground(new Color(0, 128, 0));
+        labelSucesso.setHorizontalAlignment(SwingConstants.CENTER);
+        labelSucesso.setPreferredSize(new Dimension(0, 20)); // Altura mínima
+        gbc.gridx = 0;
+        gbc.gridy = 8;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 20, 10, 20);
+        painel.add(labelSucesso, gbc);
         
         botaoCadastrar = new JButton("Cadastrar");
         botaoCadastrar.setFont(new Font("Arial", Font.BOLD, 14));
         botaoCadastrar.addActionListener(e -> {
-            Logger.info("Usuário acionou o botão de cadastro com email: {}.", campoEmail.getText());
+            realizarCadastro();
         });
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 9;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 20, 10, 20);
@@ -158,12 +192,69 @@ public class TelaCadastro extends JPanel {
             cardLayout.show(getParent(), "LOGIN");
         });
         gbc.gridx = 0;
-        gbc.gridy = 8;
+        gbc.gridy = 10;
         gbc.gridwidth = 2;
         gbc.insets = new Insets(10, 20, 20, 20);
         painel.add(botaoLogin, gbc);
         
         return painel;
+    }
+
+    /**
+     * Realiza o cadastro do usuário.
+     */
+    private void realizarCadastro() {
+        String nome = campoNome.getText().trim();
+        String email = campoEmail.getText().trim();
+        String senha = new String(campoSenha.getPassword());
+
+        // Limpar mensagens anteriores
+        labelErro.setText(" ");
+        labelSucesso.setText(" ");
+
+        // Validação básica
+        if (nome.isEmpty() || email.isEmpty() || senha.isEmpty()) {
+            labelErro.setText("Por favor, preencha todos os campos.");
+            return;
+        }
+
+        if (senha.length() < 3) {
+            labelErro.setText("A senha deve ter pelo menos 3 caracteres.");
+            return;
+        }
+
+        try {
+            // Verifica se é ServicoAutenticacao para usar o método com nome
+            if (autenticacao instanceof ServicoAutenticacao) {
+                ((ServicoAutenticacao) autenticacao).registrar(nome, email, senha);
+            } else {
+                autenticacao.registrar(email, senha);
+            }
+            
+            Logger.info("Cadastro bem-sucedido para o email: {}", email);
+            labelSucesso.setText("Cadastro realizado com sucesso! Redirecionando para Home...");
+            
+            // Limpar campos
+            campoNome.setText("");
+            campoEmail.setText("");
+            campoSenha.setText("");
+            
+            // Aguardar um pouco e navegar para login
+            Timer timer = new Timer(2000, e -> {
+                CardLayout cardLayout = (CardLayout) getParent().getLayout();
+                cardLayout.show(getParent(), "HOME");
+                labelSucesso.setText(" ");
+            });
+            timer.setRepeats(false);
+            timer.start();
+            
+        } catch (EmailJaCadastradoException e) {
+            labelErro.setText("Este email já está cadastrado. Tente fazer login.");
+            Logger.warn("Tentativa de cadastro com email já existente: {}", email);
+        } catch (Exception e) {
+            labelErro.setText("Erro ao realizar cadastro. Tente novamente.");
+            Logger.error(e, "Erro inesperado ao realizar cadastro");
+        }
     }
     
     public JTextField getCampoNome() {
