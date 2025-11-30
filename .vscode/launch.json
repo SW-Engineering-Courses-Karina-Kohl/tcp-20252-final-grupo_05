@@ -20,23 +20,10 @@
       "request": "launch",
       "mainClass": "main.Main",
       "projectName": "tcp-20252-final-grupo_05",
-      "classPaths": [
-        "lib/tinylog-api-2.7.0.jar",
-        "lib/tinylog-impl-2.7.0.jar",
-        "src/main",
-        "src/resources",
-        "."
-      ],
-      "modulePaths": [],
-      "vmArgs": "-Dtinylog.configuration=config/tinylog.properties",
+      "vmArgs": "-Dtinylog.configuration=${workspaceFolder}/config/tinylog.properties",
       "args": "",
-      "preLaunchTask": "compile-with-script"
-    },
-    {
-      "type": "java",
-      "name": "Rodar Arquivo Atual",
-      "request": "launch",
-      "mainClass": "${file}"
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart"
     }
   ]
 }
