@@ -77,6 +77,24 @@ public abstract class Conteudo extends ContextEntity {
         this.dataLanc = dataLanc;
     }
 
+    /**
+     * Calcula a média simples das notas das avaliações.
+     * 
+     * @return A média das notas (0.0 se não houver avaliações)
+     */
+    public double calcularMedia() {
+        if (avaliacoes.isEmpty()) {
+            return 0.0;
+        }
+
+        double somaNotas = 0.0;
+        for (Avaliacao aval : avaliacoes) {
+            somaNotas += aval.getNota();
+        }
+
+        return somaNotas / avaliacoes.size();
+    }
+
     public double calcularMediaPonderada() {
         if (avaliacoes.isEmpty()) {
             return 0.0;

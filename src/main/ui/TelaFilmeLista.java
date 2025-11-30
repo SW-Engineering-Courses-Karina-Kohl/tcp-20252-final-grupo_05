@@ -116,13 +116,24 @@ public class TelaFilmeLista extends JPanel {
         labelData.setForeground(new Color(100, 100, 100));
         
         int numAvaliacoes = filme.getAvaliacoes().size();
-        JLabel labelAvaliacoes = new JLabel("Avaliações: " + numAvaliacoes);
+        String textoAvaliacoes = numAvaliacoes == 1 ? "1 avaliação" : numAvaliacoes + " avaliações";
+        JLabel labelAvaliacoes = new JLabel(textoAvaliacoes);
         labelAvaliacoes.setFont(new Font("Arial", Font.PLAIN, 12));
         labelAvaliacoes.setForeground(new Color(100, 100, 100));
+        
+        double media = filme.calcularMedia();
+        String textoMedia = numAvaliacoes > 0 
+            ? String.format("Média: %.1f", media)
+            : "";
+        JLabel labelMedia = new JLabel(textoMedia);
+        labelMedia.setFont(new Font("Arial", Font.PLAIN, 12));
+        labelMedia.setForeground(new Color(100, 100, 100));
         
         painelInfo.add(labelData);
         painelInfo.add(Box.createVerticalStrut(5));
         painelInfo.add(labelAvaliacoes);
+        painelInfo.add(Box.createVerticalStrut(5));
+        painelInfo.add(labelMedia);
         
         painelConteudo.add(labelTitulo, BorderLayout.NORTH);
         painelConteudo.add(painelInfo, BorderLayout.CENTER);
