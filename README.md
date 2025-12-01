@@ -15,49 +15,63 @@ Projeto final da disciplina de **INF01120 - Técnicas de Construção de Program
 
 ---
 
-## 📁 Estrutura do Projeto
-
-A estrutura do projeto segue as convenções do Java, separando as responsabilidades em pacotes (`models`, `services`, `ui`) para garantir a modularidade e manutenibilidade.
-
+📁 Estrutura do Projeto
+A estrutura do projeto segue as convenções do Java, separando as responsabilidades em pacotes (models, service, ui) para garantir a modularidade. O pacote service agora inclui repositórios genéricos e um subpacote para autenticação, enquanto a ui foi expandida com um gerenciador de navegação e telas de listagem específicas.
 ```bash
 TCP-20252-final-grupo-05
     │
-    ├── config                   <-- Arquivos de configuração (ex: tinylog.properties)
+    ├── config                   <-- Arquivos de configuração (tinylog.properties)
     ├── lib                      <-- Dependências externas (Tinylog, JUnit)
-    ├── scripts                  <-- Scripts de execução automatizada (Windows/Linux)
+    ├── scripts                  <-- Scripts de automação (build/test para Windows e Linux/macOS)
     │
     └── src
         │
         ├───── main  <-- Pacote principal
         │       │
-        │       ├── Main.java    <-- Classe principal que inicia o programa
+        │       ├── Main.java    <-- Classe principal (Ponto de entrada)
         │       │
-        │       ├── models               <-- (Classes que representam dados/entidades)
+        │       ├── models               <-- (Entidades do domínio)
+        │       │   ├── ContextEntity.java (abstrata base)
         │       │   ├── Pessoa.java      (abstrata)
-        │       │   ├── Critico.java
         │       │   ├── Arigo.java
+        │       │   ├── Critico.java
         │       │   ├── Avaliador.java   (interface)
         │       │   ├── Conteudo.java    (abstrata)
         │       │   ├── Filme.java
         │       │   ├── Serie.java
         │       │   ├── Livro.java
         │       │   ├── Jogo.java
-        │       │   ├── Avaliacao.java
         │       │   ├── Temporada.java
-        │       │   └── Episodio.java
+        │       │   ├── Episodio.java
+        │       │   └── Avaliacao.java
         │       │
-        │       ├── services             <-- (Classes com lógica de negócio)
-        │       │   └── ServicoPromocao.java
+        │       ├── service              <-- (Lógica de negócio e persistência em memória)
+        │       │   ├── Context.java     (Container dos repositórios e estado global)
+        │       │   ├── BaseRepository.java
+        │       │   ├── ConteudoRepository.java
+        │       │   ├── CarregadorDeDados.java
+        │       │   ├── ServicoPromocao.java
+        │       │   │
+        │       │   └── autenticacao     <-- (Subpacote de segurança)
+        │       │       ├── Autenticacao.java (interface)
+        │       │       ├── ServicoAutenticacao.java
+        │       │       └── Exceptions... (CredenciaisInvalidas, EmailJaCadastrado)
         │       │
-        │       └── ui (ou view)         <-- (Classes da Interface com o Usuário)
-        │           ├── TelaLogin.java   
+        │       └── ui (ou view)         <-- (Interface Gráfica Swing)
+        │           ├── GerenciadorTelas.java (Controlador de navegação)
+        │           ├── TelaLogin.java
+        │           ├── TelaCadastro.java
         │           ├── TelaInicial.java
-        │           └── TelaDetalhes.java
+        │           ├── TelaDetalhes.java
+        │           ├── TelaFilmeLista.java
+        │           ├── TelaSerieLista.java
+        │           ├── TelaLivroLista.java
+        │           └── TelaJogoLista.java
         │
         ├───── resources
-        │       └── data                 <-- (Arquivos de persistência de dados)    
+        │       └── data                 <-- (Arquivos CSV: filmes, series, usuarios, etc.)    
         │
-        └───── test                       <-- (Testes unitários)
+        └───── test                       <-- (Testes Unitários JUnit para models e services)
 ```
 
 ## 🚀 Como Compilar e Executar
