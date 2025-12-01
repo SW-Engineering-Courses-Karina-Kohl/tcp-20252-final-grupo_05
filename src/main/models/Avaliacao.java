@@ -16,11 +16,17 @@ public class Avaliacao extends ContextEntity {
      */
     public Avaliacao(UUID id, int nota, int peso, String comentario, UUID idUsuario) {
         super(id);
+
+        if (peso <= 0) {
+            throw new IllegalArgumentException("O peso da avaliação deve ser maior que zero.");
+        }
+
         this.nota = nota;
         this.peso = peso;
         this.comentario = comentario;
         this.idUsuario = idUsuario;
         this.likes = 0;
+
     }
 
     /**

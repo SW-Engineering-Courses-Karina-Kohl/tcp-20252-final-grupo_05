@@ -41,14 +41,6 @@ public class FilmeTest {
     }
 
     @Test
-    void lancaExcecaoQuandoPesoTotalForZero() {
-        Filme filme = new Filme("Erro de Peso", LocalDate.now(), 100, "Diretor");
-        Avaliacao invalida = new Avaliacao(5, 0, "Invalida", UUID.randomUUID());
-        filme.adicionarAvaliacao(invalida);
-        assertThrows(IllegalStateException.class, filme::calcularMediaPonderada);
-    }
-
-    @Test
     void construtorLancaQuandoTituloNulo() {
         assertThrows(IllegalArgumentException.class,
                 () -> new Filme(null, LocalDate.now(), 120, "Diretor"));
