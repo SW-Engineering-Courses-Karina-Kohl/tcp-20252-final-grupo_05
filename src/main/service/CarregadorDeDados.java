@@ -104,7 +104,6 @@ public class CarregadorDeDados {
             }
 
         } catch (Exception e) {
-            System.err.println("Erro ao carregar filmes: " + e.getMessage());
             Logger.error(e, "Erro ao carregar filmes a partir de 'filmes.csv'.");
         }
         return filmes;
@@ -129,7 +128,6 @@ public class CarregadorDeDados {
             }
 
         } catch (Exception e) {
-            System.err.println("Erro ao carregar livros: " + e.getMessage());
             Logger.error(e, "Erro ao carregar livros a partir de 'livros.csv'.");
         }
         return livros;
