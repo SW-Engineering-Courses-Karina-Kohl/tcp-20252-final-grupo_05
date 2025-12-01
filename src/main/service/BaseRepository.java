@@ -8,28 +8,27 @@ import java.util.UUID;
 import main.models.ContextEntity;
 
 /**
- * Base repository class for in-memory data storage and retrieval.
- * Provides basic CRUD operations similar to .NET DbContext pattern.
+ * Repositório base para armazenamento e recuperação de dados em memória.
  * 
- * @param <T> The entity type that must have a getId() method returning UUID
+ * @param <T> Tipo da entidade que deve ter um método getId() retornando UUID
  */
 public class BaseRepository<T> implements Serializable {
     private static final long serialVersionUID = 1L;
     private final List<T> entities;
 
     /**
-     * Constructor that initializes the repository with a list of entities.
+     * Inicializa o repositório com uma lista de entidades.
      * 
-     * @param initialEntities The initial list of entities to populate the repository
+     * @param initialEntities Lista inicial de entidades
      */
     public BaseRepository(List<T> initialEntities) {
         this.entities = new ArrayList<>(initialEntities);
     }
 
     /**
-     * Adds a new entity to the repository.
+     * Adiciona uma nova entidade ao repositório.
      * 
-     * @param entity The entity to add
+     * @param entity Entidade a adicionar
      */
     public void add(T entity) {
         if (entity == null) {
@@ -39,11 +38,10 @@ public class BaseRepository<T> implements Serializable {
     }
 
     /**
-     * Retrieves an entity by its UUID identifier.
-     * Assumes the entity has a getId() method that returns UUID.
+     * Busca uma entidade pelo seu UUID.
      * 
-     * @param id The UUID of the entity to find
-     * @return The entity with the matching ID, or null if not found
+     * @param id UUID da entidade a buscar
+     * @return Entidade com o ID correspondente, ou null se não encontrada
      */
     public T getById(UUID id) {
         if (id == null) {
@@ -52,24 +50,23 @@ public class BaseRepository<T> implements Serializable {
         
         for (T entity : entities) {
             try {
-                // Use reflection to call getId() method
                 java.lang.reflect.Method getIdMethod = entity.getClass().getMethod("getId");
                 UUID entityId = (UUID) getIdMethod.invoke(entity);
                 if (id.equals(entityId)) {
                     return entity;
                 }
             } catch (NoSuchMethodException | IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
-                // If getId() doesn't exist or fails, skip this entity
+                // Pula esta entidade se não tiver getId()
             }
         }
         return null;
     }
 
     /**
-     * Deletes an entity from the repository by its UUID identifier.
+     * Remove uma entidade do repositório pelo seu UUID.
      * 
-     * @param id The UUID of the entity to delete
-     * @return true if the entity was found and removed, false otherwise
+     * @param id UUID da entidade a remover
+     * @return true se a entidade foi encontrada e removida, false caso contrário
      */
     public boolean delete(UUID id) {
         T entity = getById(id);
@@ -80,18 +77,18 @@ public class BaseRepository<T> implements Serializable {
     }
 
     /**
-     * Returns all entities in the repository as a mutable list reference.
+     * Retorna todas as entidades do repositório.
      * 
-     * @return The list of all entities (mutable reference)
+     * @return Lista de todas as entidades
      */
     public List<T> getAll() {
         return entities;
     }
 
     /**
-     * Alias for getAll() to provide .NET-like API (findAll).
+     * Alias para getAll().
      * 
-     * @return The list of all entities (mutable reference)
+     * @return Lista de todas as entidades
      */
     public List<T> findAll() {
         return getAll();
@@ -99,9 +96,8 @@ public class BaseRepository<T> implements Serializable {
 
     /**
      * Retorna a entidade mais recente baseada na data de criação.
-     * A entidade deve ser uma instância de ContextEntity ou ter um método getDataCriacao().
      * 
-     * @return A entidade com a data de criação mais recente, ou null se não houver entidades ou nenhuma tiver data de criação
+     * @return Entidade com a data de criação mais recente, ou null se não houver
      */
     public T getMaisRecente() {
         if (entities.isEmpty()) {
@@ -114,21 +110,17 @@ public class BaseRepository<T> implements Serializable {
         for (T entity : entities) {
             LocalDate dataCriacao = null;
 
-            // Verifica se é instância de ContextEntity
             if (entity instanceof ContextEntity) {
                 dataCriacao = ((ContextEntity) entity).getDataCriacao();
             } else {
-                // Tenta usar reflection para chamar getDataCriacao()
                 try {
                     java.lang.reflect.Method getDataCriacaoMethod = entity.getClass().getMethod("getDataCriacao");
                     dataCriacao = (LocalDate) getDataCriacaoMethod.invoke(entity);
                 } catch (Exception e) {
-                    // Se não tiver o método, pula esta entidade
                     continue;
                 }
             }
 
-            // Se encontrou uma data de criação e é mais recente que a atual
             if (dataCriacao != null) {
                 if (dataMaisRecente == null || dataCriacao.isAfter(dataMaisRecente)) {
                     dataMaisRecente = dataCriacao;
