@@ -7,8 +7,7 @@ import main.models.*;
 import org.tinylog.Logger;
 
 /**
- * Context class that provides DbContext-like access to in-memory data repositories.
- * Initializes repositories from CarregadorDeDados and exposes them as public properties.
+ * Contexto que fornece acesso aos repositórios de dados em memória.
  */
 public class Context implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -22,8 +21,7 @@ public class Context implements Serializable {
     public final BaseRepository<Avaliacao> avaliacoes;
 
     /**
-     * Constructor that creates an empty context with empty repositories.
-     * Use initialize() to load data from CarregadorDeDados.
+     * Cria um contexto vazio com repositórios vazios.
      */
     public Context() {
         this.pessoas = new BaseRepository<>(new ArrayList<>());
@@ -35,11 +33,10 @@ public class Context implements Serializable {
     }
 
     /**
-     * Initializes a context by first trying to load from disk.
-     * If no saved data exists, loads from CarregadorDeDados and saves it.
+     * Inicializa o contexto. Tenta carregar do disco, senão carrega do CarregadorDeDados.
      * 
-     * @param carregador The CarregadorDeDados instance to load initial data from if needed
-     * @return The initialized Context instance
+     * @param carregador Instância do CarregadorDeDados para carregar dados iniciais
+     * @return Contexto inicializado
      */
     public static Context initialize(CarregadorDeDados carregador) {
         if (carregador == null) {
@@ -82,15 +79,10 @@ public class Context implements Serializable {
     }
 
     /**
-     * Loads data from CarregadorDeDados into the context repositories.
-     * 
-     * @param context The context to populate
-     * @param carregador The CarregadorDeDados instance to load data from
+     * Carrega dados do CarregadorDeDados nos repositórios do contexto.
      */
     private static void loadFromCarregador(Context context, CarregadorDeDados carregador) {
         Logger.info("Inicializando contexto com dados do CarregadorDeDados.");
-
-        // Clear existing data and load from CarregadorDeDados
         List<Pessoa> pessoasList = carregador.carregarUsuarios();
         context.pessoas.getAll().clear();
         context.pessoas.getAll().addAll(pessoasList);
@@ -111,7 +103,6 @@ public class Context implements Serializable {
         context.series.getAll().clear();
         context.series.getAll().addAll(seriesList);
 
-        // Avaliacoes are not loaded from CSV, so keep empty
         context.avaliacoes.getAll().clear();
 
         Logger.info("Contexto inicializado. Total de pessoas: {}, filmes: {}, livros: {}, jogos: {}, séries: {}.",
@@ -123,20 +114,19 @@ public class Context implements Serializable {
     }
 
     /**
-     * Saves the entire context to disk using Java serialization.
-     * Uses the default save path "context.dat".
+     * Salva o contexto em disco usando serialização Java.
      * 
-     * @throws IOException If writing fails
+     * @throws IOException Se houver erro ao escrever
      */
     public void save() throws IOException {
         save(DEFAULT_SAVE_PATH);
     }
 
     /**
-     * Saves the entire context to disk using Java serialization.
+     * Salva o contexto em disco no caminho especificado.
      * 
-     * @param filePath The path where to save the context
-     * @throws IOException If writing fails
+     * @param filePath Caminho onde salvar o contexto
+     * @throws IOException Se houver erro ao escrever
      */
     public void save(String filePath) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(
@@ -147,20 +137,19 @@ public class Context implements Serializable {
     }
 
     /**
-     * Checks if a saved context file exists on disk.
-     * Uses the default save path "context.dat".
+     * Verifica se existe um contexto salvo em disco.
      * 
-     * @return true if the file exists, false otherwise
+     * @return true se o arquivo existe, false caso contrário
      */
     public static boolean hasSavedData() {
         return hasSavedData(DEFAULT_SAVE_PATH);
     }
 
     /**
-     * Checks if a saved context file exists on disk.
+     * Verifica se existe um contexto salvo no caminho especificado.
      * 
-     * @param filePath The path to check
-     * @return true if the file exists, false otherwise
+     * @param filePath Caminho a verificar
+     * @return true se o arquivo existe, false caso contrário
      */
     public static boolean hasSavedData(String filePath) {
         File file = new File(filePath);
@@ -168,24 +157,23 @@ public class Context implements Serializable {
     }
 
     /**
-     * Loads a context from disk using Java deserialization.
-     * Uses the default save path "context.dat".
+     * Carrega um contexto do disco usando deserialização Java.
      * 
-     * @return The loaded Context instance
-     * @throws IOException If reading fails
-     * @throws ClassNotFoundException If the class cannot be found
+     * @return Contexto carregado
+     * @throws IOException Se houver erro ao ler
+     * @throws ClassNotFoundException Se a classe não for encontrada
      */
     public static Context load() throws IOException, ClassNotFoundException {
         return load(DEFAULT_SAVE_PATH);
     }
 
     /**
-     * Loads a context from disk using Java deserialization.
+     * Carrega um contexto do disco no caminho especificado.
      * 
-     * @param filePath The path to the file to load
-     * @return The loaded Context instance
-     * @throws IOException If reading fails
-     * @throws ClassNotFoundException If the class cannot be found
+     * @param filePath Caminho do arquivo a carregar
+     * @return Contexto carregado
+     * @throws IOException Se houver erro ao ler
+     * @throws ClassNotFoundException Se a classe não for encontrada
      */
     public static Context load(String filePath) throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(
@@ -197,7 +185,7 @@ public class Context implements Serializable {
     }
 
     /**
-     * Retorna os 3 conteúdos com mais avaliações, combinando todos os tipos (Filme, Livro, Jogo, Serie).
+     * Retorna os 3 conteúdos com mais avaliações.
      * 
      * @return Lista com os 3 conteúdos que possuem mais avaliações
      */
