@@ -157,3 +157,28 @@ chmod +x scripts/test-macos-linux.sh
    - Descreva claramente o que foi implementado
    - Referencie issues relacionadas, se houver
    - Aguarde revisão antes de fazer merge
+
+
+
+## Logs do Sistema
+
+- **Nome e versão da biblioteca:**  
+  tinylog 2.7.0 (`tinylog-api` e `tinylog-impl`).
+
+- **Link da documentação oficial:**  
+  https://tinylog.org/v2/
+
+- **Exemplos de uso no código**
+
+  O código utiliza chamadas como `Logger.info(...)`, `Logger.warn(...)` e `Logger.error(e, ...)` em classes de domínio, serviços e telas. Alguns exemplos reais:
+
+  - Exemplo de `INFO` (classe `ServicoPromocao`):  
+    `Logger.info("Iniciando tentativa de promoção para o usuário com ID {}.", arigo.getId());`
+
+  - Exemplo de `ERROR` (classe `Conteudo`):  
+    `Logger.error("Título inválido ao criar conteúdo: '{}'.", titulo);`
+
+  Esses logs registram tanto o fluxo normal da aplicação quanto situações de erro que ajudam na depuração e na manutenção.
+
+- **Propósito do logging no sistema:**  
+  O logging foi adicionado para tornar o comportamento da aplicação mais observável: registrar eventos relevantes, detectar rapidamente problemas de dados ou configuração e apoiar a depuração durante desenvolvimento e testes, sem depender apenas da interface gráfica ou de mensagens de exceção.
