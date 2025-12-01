@@ -12,6 +12,9 @@ public class LivroTest {
     private Arigo arigo;
     private Critico critico;
 
+    public static final int PESO_AVALIACAO_ARIGO = 1;
+    public static final int PESO_AVALIACAO_CRITICO = 2;
+
     @BeforeEach
     void setup() {
         arigo = new Arigo("João", LocalDate.of(1995, 1, 1), "j@j.com");
@@ -24,7 +27,8 @@ public class LivroTest {
         arigo.avaliar(livro, 4, "Bom");
         critico.avaliar(livro, 5, "Ótimo");
 
-        double esperado = (4 * 1 + 5 * 2) / 3.0;
+        double somaPesos = PESO_AVALIACAO_ARIGO + PESO_AVALIACAO_CRITICO;
+        double esperado = (4 * PESO_AVALIACAO_ARIGO + 5 * PESO_AVALIACAO_CRITICO) / somaPesos;
         assertEquals(esperado, livro.calcularMediaPonderada(), 0.0001);
     }
 

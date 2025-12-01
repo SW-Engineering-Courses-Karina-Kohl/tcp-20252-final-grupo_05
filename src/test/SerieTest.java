@@ -12,6 +12,9 @@ public class SerieTest {
     private Arigo arigo;
     private Critico critico;
 
+    public static final int PESO_AVALIACAO_ARIGO = 1;
+    public static final int PESO_AVALIACAO_CRITICO = 2;
+
     @BeforeEach
     void setup() {
         arigo = new Arigo("João", LocalDate.of(1995, 1, 1), "j@j.com");
@@ -33,7 +36,8 @@ public class SerieTest {
         arigo.avaliar(serie, 3, "Razoável");
         critico.avaliar(serie, 4, "Bom");
 
-        double esperado = (3 * 1 + 4 * 2) / 3.0;
+        double somaPesos = PESO_AVALIACAO_ARIGO + PESO_AVALIACAO_CRITICO;
+        double esperado = (3 * PESO_AVALIACAO_ARIGO + 4 * PESO_AVALIACAO_CRITICO) / somaPesos;
         assertEquals(esperado, serie.calcularMediaPonderada(), 0.0001);
 
         assertEquals(1, serie.getTotalTemporadas());

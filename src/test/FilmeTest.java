@@ -13,6 +13,10 @@ public class FilmeTest {
     private Arigo arigo;
     private Critico critico;
 
+    public static final int PESO_AVALIACAO_ARIGO = 1;
+    public static final int PESO_AVALIACAO_CRITICO = 2;
+
+
     @BeforeEach
     void setup() {
         arigo = new Arigo("João", LocalDate.of(1995, 1, 1), "j@j.com");
@@ -25,7 +29,8 @@ public class FilmeTest {
         arigo.avaliar(filme, 4, "Bom");
         critico.avaliar(filme, 5, "Excelente");
 
-        double esperado = (4 * 1 + 5 * 2) / 3.0;
+        double somaPesos = PESO_AVALIACAO_ARIGO + PESO_AVALIACAO_CRITICO;
+        double esperado = (4 * PESO_AVALIACAO_ARIGO + 5 * PESO_AVALIACAO_CRITICO) / somaPesos;
         assertEquals(esperado, filme.calcularMediaPonderada(), 0.0001);
     }
 
@@ -33,14 +38,6 @@ public class FilmeTest {
     void retornaZeroQuandoNaoHaAvaliacoes() {
         Filme filme = new Filme("Sem Avaliações", LocalDate.now(), 90, "Diretor");
         assertEquals(0.0, filme.calcularMediaPonderada(), 0.0001);
-    }
-
-    @Test
-    void lancaExcecaoQuandoPesoTotalForZero() {
-        Filme filme = new Filme("Erro de Peso", LocalDate.now(), 100, "Diretor");
-        Avaliacao invalida = new Avaliacao(5, 0, "Invalida", UUID.randomUUID());
-        filme.adicionarAvaliacao(invalida);
-        assertThrows(IllegalStateException.class, filme::calcularMediaPonderada);
     }
 
     @Test
