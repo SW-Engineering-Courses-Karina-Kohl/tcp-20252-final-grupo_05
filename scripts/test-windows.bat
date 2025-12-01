@@ -27,7 +27,7 @@ if exist "src\resources\data\*.csv" (
 echo.
 echo [2/3] Compilando os Arquivos...
 :: o parametro '-d bin' joga a sujeira (.class) para dentro da pasta bin
-javac -cp "%CLASSPATH%" -d bin src\main\*.java src\main\ui\*.java src\main\models\*.java src\main\service\*.java
+javac -cp "%CLASSPATH%" -d bin src\main\*.java src\main\ui\*.java src\main\models\*.java src\main\service\*.java src\main\service\autenticacao\*.java
 
 if %errorlevel% neq 0 (
     echo [ERRO] Falha na compilacao do Main.
