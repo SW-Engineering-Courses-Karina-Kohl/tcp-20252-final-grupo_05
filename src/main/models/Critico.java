@@ -11,6 +11,9 @@ public class Critico extends Pessoa implements Avaliador {
     */
     private static final int PESO_AVALIACAO = 2; 
 
+    private static final int NOTA_MINIMA = 1;
+    private static final int NOTA_MAXIMA = 5;
+
     /**
      * Construtor com ID opcional. Se o ID for null, gera um UUID aleatório.
      * Define senha padrão se não fornecida.
@@ -54,8 +57,8 @@ public class Critico extends Pessoa implements Avaliador {
     @Override
     public Avaliacao avaliar(Conteudo conteudo, int nota, String comentario) {
        
-        if(nota < 1 || nota > 5){
-            throw new  IllegalArgumentException("A nota deve ser entre 1 e 5");
+        if(nota < NOTA_MINIMA || nota > NOTA_MAXIMA){
+            throw new  IllegalArgumentException(String.format("A nota deve ser entre %d e %d", NOTA_MINIMA, NOTA_MAXIMA));
         }
        
         Avaliacao novaAvaliacao = new Avaliacao(nota, PESO_AVALIACAO, comentario, this.getId());

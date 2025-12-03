@@ -8,20 +8,27 @@ import java.time.LocalDate;
 public class PessoaTest {
     
     @Test
-    public void naoPermitirNotaInvalida() {
+    public void naoPermitirNotaMaiorQueCinco() {
 
         Arigo usuario = new Arigo("Teste", LocalDate.now(), "teste@.com");
         Filme filme = new Filme("Filme Teste", LocalDate.now(), 120, "Diretor");
         
         assertThrows(IllegalArgumentException.class, () -> {
-            usuario.avaliar(filme, 11, "Nota Inválida");
+            usuario.avaliar(filme, 6, "Nota Maior que 5");
         });
+
+    }
+
+    @Test
+    public void naoPermitirNotaMenorQueUm() {
+        Arigo usuario = new Arigo("Teste", LocalDate.now(), "teste@.com");
+        Filme filme = new Filme("Filme Teste", LocalDate.now(), 120, "Diretor");
 
         assertThrows(IllegalArgumentException.class, () -> {
-            usuario.avaliar(filme, -1, "Nota Inválida");
-
+            usuario.avaliar(filme, 0, "Nota Menor que 1");
         });
     }
+
 
     @Test
     public void verificaAvaliacaoFoiAdicionada() {

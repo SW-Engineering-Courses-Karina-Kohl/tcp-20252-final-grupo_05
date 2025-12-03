@@ -31,7 +31,7 @@ fi
 
 echo ""
 echo "[2/4] Compilando Codigo Fonte..."
-javac -cp "$CLASSPATH" -d bin src/main/*.java src/main/ui/*.java src/main/models/*.java src/main/service/*.java
+javac -cp "$CLASSPATH" -d bin src/main/*.java src/main/ui/*.java src/main/models/*.java src/main/service/*.java src/main/service/autenticacao/*.java
 
 echo ""
 echo "[3/4] Compilando Testes..."
