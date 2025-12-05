@@ -27,6 +27,29 @@ jobs:
           mkdir -p bin
           javac -d bin $(find src -name "*.java")
 
+      - name: Instalar JUnit 5 e tinylog
+        run: |
+          mkdir -p lib
+          curl -L -o lib/junit-platform-console-standalone.jar \
+            https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.2/junit-platform-console-standalone-1.10.2.jar
+          curl -L -o lib/tinylog-api-2.7.0.jar \
+            https://repo1.maven.org/maven2/org/tinylog/tinylog-api/2.7.0/tinylog-api-2.7.0.jar
+          curl -L -o lib/tinylog-impl-2.7.0.jar \
+            https://repo1.maven.org/maven2/org/tinylog/tinylog-impl/2.7.0/tinylog-impl-2.7.0.jar
+
+      - name: Compilar testes
+        run: |
+          mkdir -p out
+          find src -name "*.java" > sources.txt
+          javac -cp "lib/junit-platform-console-standalone.jar:lib/tinylog-api-2.7.0.jar:lib/tinylog-impl-2.7.0.jar" -d out @sources.txt
+
+      - name: Rodar testes
+        run: |
+          java -Dtinylog.configuration=config/tinylog.properties \
+            -jar lib/junit-platform-console-standalone.jar \
+            --class-path "out:src/resources:lib/tinylog-api-2.7.0.jar:lib/tinylog-impl-2.7.0.jar" \
+            --scan-class-path     
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
