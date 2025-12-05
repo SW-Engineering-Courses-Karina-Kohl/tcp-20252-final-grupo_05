@@ -2,10 +2,11 @@ name: SonarCloud Scan
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - develop
   pull_request:
-    types: [opened, synchronize, reopened]
-
+    branches:
+      - develop
 jobs:
   analyze:
     name: Build & Analyze
