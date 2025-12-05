@@ -20,11 +20,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Compile Java sources
-        run: |
-          mkdir -p bin
-          javac -d bin $(find src -name "*.java")
-
       - name: Instalar JUnit 5 e tinylog
         run: |
           mkdir -p lib
@@ -35,7 +30,12 @@ jobs:
           curl -L -o lib/tinylog-impl-2.7.0.jar \
             https://repo1.maven.org/maven2/org/tinylog/tinylog-impl/2.7.0/tinylog-impl-2.7.0.jar
 
-      - name: Compilar testes
+     - name: Compile Java sources
+        run: |
+          mkdir -p bin
+          javac -d bin $(find src -name "*.java")
+     
+     - name: Compilar testes
         run: |
           mkdir -p out
           find src -name "*.java" > sources.txt
