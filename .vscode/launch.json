@@ -1,0 +1,29 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Rodar ArigóFlix (Script)",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "main.Main",
+      "projectName": "tcp-20252-final-grupo_05",
+      "preLaunchTask": "run-script",
+      "internalConsoleOptions": "neverOpen",
+      "console": "internalConsole"
+    },
+    {
+      "type": "java",
+      "name": "Rodar ArigóFlix (Extension)",
+      "request": "launch",
+      "mainClass": "main.Main",
+      "projectName": "tcp-20252-final-grupo_05",
+      "vmArgs": "-Dtinylog.configuration=${workspaceFolder}/config/tinylog.properties",
+      "args": "",
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart"
+    }
+  ]
+}
