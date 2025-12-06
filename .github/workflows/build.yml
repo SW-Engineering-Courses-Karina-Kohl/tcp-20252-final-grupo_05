@@ -34,9 +34,11 @@ jobs:
 
       - name: Compilar testes
         run: |
-          mkdir -p out
+          mkdir -p bin
           find src -name "*.java" > sources.txt
-          javac -cp "lib/junit-platform-console-standalone.jar:lib/tinylog-api-2.7.0.jar:lib/tinylog-impl-2.7.0.jar" -d out @sources.txt
+          javac -cp "lib/junit-platform-console-standalone.jar:lib/tinylog-api-2.7.0.jar:lib/tinylog-impl-2.7.0.jar" -d bin @sources.txt
+
+
 
       - name: Rodar testes
         run: |
